@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Faceit User Stats</title>
+	</head>
+	<body>
+		<h1>Faceit User Stats</h1>
+		<span class="fi fi-tr"></span>
+		<div>
+			<input type="text" id="username" placeholder="Введите никнейм пользователя" />
+			<button id="fetchStats">Получить статистику</button>
+		</div>
+		<div id="country-list">
+			<p id="country"></p>
+			<i id="country-icon"></i>
+		</div>
+		<div id="userInfo">
+			<img id="avatar" src="" alt="Аватар пользователя" style="display: none" />
+		</div>
+		<div id="games"></div>
+		<script src="./script.js"></script>
+	</body>
+</html>

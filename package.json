@@ -1,0 +1,22 @@
+{
+	"name": "faceit-parcer",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"start": "node api/proxy.js",
+		"dev": "nodemon api/proxy.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"axios": "^1.7.2",
+		"cors": "^2.8.5",
+		"express": "^4.19.2",
+		"request": "^2.88.2"
+	},
+	"devDependencies": {
+		"nodemon": "^3.1.4"
+	}
+}
