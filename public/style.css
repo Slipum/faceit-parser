@@ -1,3 +1,179 @@
-.country-list {
+* {
+	font-family: 'Segoe UI', sans-serif;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html {
+	background-color: #2c2727;
+}
+
+a {
+	color: black;
+	text-decoration: none;
+}
+
+hr {
+	margin: 5px 0;
+	border: 5px solid #2c2727;
+}
+
+/* HEADER */
+
+.header-container {
+	background-color: #f4f4f4;
+	font-size: 16px;
+	line-height: 1.6;
+	margin: 0;
+	padding: 10px 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background-color: #ff7517;
+	color: #f6f4f4;
+	width: 100%;
+	position: relative;
+}
+
+.h-logo {
+	text-align: start;
+}
+
+.h-logo h1 {
+	color: #f6f4f4;
+}
+
+.goto:hover {
+	text-decoration: underline;
+}
+
+.h-login:hover {
+	text-decoration: underline;
+}
+
+.h-register:hover {
+	text-decoration: underline;
+}
+
+.h-auth {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+}
+
+.h-auth a {
+	padding: 0px 8px;
+	color: #f6f4f4;
+}
+
+.search-wrapper {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.find-container {
+	position: absolute;
+	left: 14px;
+	color: black;
+	opacity: 0.6;
+	font-size: 1.2rem;
+}
+
+.search-container {
+	display: flex;
+	align-items: center;
+}
+
+.search-container button {
+	position: absolute;
+	font-size: 1.5rem;
+	background: none;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	color: black;
+	opacity: 0.6;
+	left: 93%;
+	width: auto;
+}
+
+.search-container input {
+	padding-left: 40px;
+	height: 2.5rem;
+	font-size: 16px;
+	width: 500px;
+	transition: 0.5s;
+	border-radius: 3px;
+	border: 2px solid #f6f4f4;
+	outline: none;
+}
+
+.github {
+	font-size: 1.9rem;
+}
+
+/* CLOSE */
+
+/* MAIN INFO */
+
+.main-container {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	color: #f6f4f4;
+}
+
+.main-info {
+	display: none;
+	justify-content: center;
+	text-align: center;
+	width: 80%;
+	background-color: #3e3939;
+	padding-top: 20px;
+}
+
+.main-info img {
+	width: 25%;
+	margin: 0 auto;
+}
+
+.country-info {
+	justify-content: center;
+	display: flex;
+	align-items: center;
+}
+
+.country-info i {
+	padding-top: 10px;
+	margin-right: 5px;
+}
+
+#games {
+	align-items: center;
+	justify-content: center;
+	width: 80%;
 	display: flex;
 }
+
+#games div {
+	margin: 0 20px;
+	font-size: 2rem;
+	background-color: #3e3939;
+}
+
+#games div h2 {
+	font-size: 2.5rem;
+	font-weight: 600;
+	text-align: center;
+}
+
+.games-container {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	margin-top: 10px;
+}
+
+/* ------ */

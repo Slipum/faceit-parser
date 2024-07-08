@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0',
 	};
 
-	document.getElementById('fetchStats').addEventListener('click', () => {
+	const fetchStats = () => {
 		const username = document.getElementById('username').value;
 		if (!username) {
 			alert('Пожалуйста, введите никнейм пользователя.');
@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
 				return response.json();
 			})
 			.then((data) => {
-				console.log('Полученные данные:', data);
 				const payload = data.payload;
 				const avatarImg = document.getElementById('avatar');
 				if (payload && payload.avatar) {
@@ -72,5 +71,22 @@ document.addEventListener('DOMContentLoaded', () => {
 			.catch((error) => {
 				console.error('Ошибка:', error);
 			});
+	};
+
+	document.getElementById('fetchStats').addEventListener('click', fetchStats);
+
+	document.getElementById('username').addEventListener('keypress', (event) => {
+		if (event.key === 'Enter') {
+			fetchStats();
+			document.getElementById('main-c').style.display = 'block';
+		}
+	});
+
+	document.getElementById('clearStats').addEventListener('click', () => {
+		document.getElementById('username').value = '';
+		document.getElementById('avatar').style.display = 'none';
+		document.getElementById('country').textContent = '';
+		document.getElementById('country-icon').className = '';
+		document.getElementById('games').innerHTML = '';
 	});
 });

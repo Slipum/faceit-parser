@@ -4,25 +4,54 @@
 		<link
 			rel="stylesheet"
 			href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 		<link rel="stylesheet" href="style.css" />
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Faceit User Stats</title>
 	</head>
 	<body>
-		<h1>Faceit User Stats</h1>
-		<div>
-			<input type="text" id="username" placeholder="Введите никнейм пользователя" />
-			<button id="fetchStats">Получить статистику</button>
+		<header class="header-container">
+			<div class="h-logo">
+				<a href="/">
+					<h1><i class="fa-solid fa-chart-simple"></i> FaceitG-Stats</h1>
+				</a>
+			</div>
+			<div class="search-wrapper">
+				<div class="search-container">
+					<div class="find-container">
+						<i class="fa-solid fa-magnifying-glass"></i>
+					</div>
+					<input type="text" id="username" placeholder="Enter faceit username" />
+					<button id="fetchStats"></button>
+					<button id="clearStats"><i class="fa-regular fa-circle-xmark"></i></button>
+				</div>
+			</div>
+			<div class="h-auth">
+				<a class="github" href="https://github.com/Slipum/faceit-parser">
+					<i class="fa-brands fa-github"></i>
+				</a>
+			</div>
+		</header>
+		<div class="main-container">
+			<div id="main-c" class="main-info">
+				<div id="userInfo">
+					<img id="avatar" src="" alt="avatar" style="display: none" />
+				</div>
+				<hr />
+				<div id="country-list">
+					<div class="country-info">
+						<i id="country-icon"></i>
+						<p id="country"></p>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div id="country-list">
-			<p id="country"></p>
-			<i id="country-icon"></i>
+		<div class="games-container">
+			<div id="games"></div>
 		</div>
-		<div id="userInfo">
-			<img id="avatar" src="" alt="Аватар пользователя" style="display: none" />
-		</div>
-		<div id="games"></div>
 		<script src="./script.js"></script>
 	</body>
 </html>
