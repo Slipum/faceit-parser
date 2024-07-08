@@ -4,11 +4,11 @@ const axios = require('axios');
 const app = express();
 
 // Настройка маршрута для статических файлов
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Маршрут для отправки главной страницы
 app.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname, '../public', 'index.html'));
+	res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Маршрут для проксирования запросов
