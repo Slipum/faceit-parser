@@ -36,15 +36,18 @@ document.addEventListener('DOMContentLoaded', () => {
 				const payload = data.payload;
 				const avatarImg = document.getElementById('avatar');
 				if (payload && payload.avatar) {
+					avatarImg.src = '';
 					avatarImg.src = payload.avatar;
 					avatarImg.style.display = 'block';
 				} else {
-					avatarImg.style.display = 'none';
+					avatarImg.src = './assets/Group1.png';
+					avatarImg.style.display = 'block';
 				}
 				const country = document.getElementById('country');
 				const icon = document.getElementById('country-icon');
 				if (payload && payload.country) {
 					country.textContent = payload.country.toUpperCase();
+					icon.className = '';
 					icon.classList.add('fi', `fi-${payload.country}`);
 				} else {
 					country.style.display = 'none';
@@ -57,12 +60,21 @@ document.addEventListener('DOMContentLoaded', () => {
 						if (gameKey === 'cs2' || gameKey === 'csgo') {
 							const gameDiv = document.createElement('div');
 							gameDiv.innerHTML = `
-													<h2>${gameKey.toUpperCase()}</h2>
-													<p>Steam Name: ${game.game_name}</p>
-													<p>Faceit Elo: ${game.faceit_elo}</p>
-													<p>Region: ${game.region}</p>
-													<p>Skill Level: ${game.skill_level}</p>
-											`;
+                            <h2>${gameKey.toUpperCase()}</h2>
+                            <p>Steam Name: ${game.game_name}</p>
+                            <p>Faceit Elo: ${game.faceit_elo}</p>
+                            <p>Region: ${
+															game.region === 'EU'
+																? `<i class="fi fi-${game.region.toLowerCase()}"></i>`
+																: ''
+														} 
+														${game.region}
+														</p>
+                            <p>Skill Level: <img src="https://cdn-frontend.faceit-cdn.net/web/static/media/assets_images_skill-icons_skill_level_${
+															game.skill_level
+														}_svg.svg" /></p>
+
+                        `;
 							gamesDiv.appendChild(gameDiv);
 						}
 					});
@@ -103,14 +115,40 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (matches && matches.length > 0) {
 					let totalKills = 0;
 					let totalDeaths = 0;
+					let totalHeadShot = 0;
+					let totalRounds = 0;
+					let totalDamage = 0;
+					let roundWadr = 0;
+					let rWmatch = 0;
 					matches.forEach((match) => {
+						if (match.i20 !== undefined) {
+							rWmatch += 1;
+							totalDamage += parseInt(match.i20, 10);
+							const allWadr = match.i18.split(' / ');
+							if (allWadr.length === 2) {
+								const wadr1 = parseInt(allWadr[0], 10);
+								const wadr2 = parseInt(allWadr[1], 10);
+								roundWadr += wadr1 + wadr2;
+							}
+						}
 						totalKills += parseInt(match.i6, 10);
 						totalDeaths += parseInt(match.i8, 10);
+						totalHeadShot += parseInt(match.c4, 10);
+						const rounds = match.i18.split(' / ');
+						if (rounds.length === 2) {
+							const round1 = parseInt(rounds[0], 10);
+							const round2 = parseInt(rounds[1], 10);
+							totalRounds += round1 + round2;
+						}
 					});
+
+					const adr = totalDamage > 0 ? totalDamage / roundWadr : 'missing';
 					const avgKills = totalKills / matches.length;
-					const realKD = totalKills / totalDeaths; // Kill per round
+					const realKD = totalKills / totalDeaths; // K/D
+					const headShot = totalHeadShot / matches.length;
+					const kpr = totalKills / totalRounds;
 					const elo = matches[0].elo;
-					displayAverageStats(avgKills, realKD, matches.length, elo); // Передаем количество матчей
+					displayAverageStats(avgKills, realKD, matches.length, elo, headShot, kpr, adr, rWmatch); // Передаем количество матчей
 				} else {
 					console.error('Матчи не найдены или пусты:', data);
 				}
@@ -120,12 +158,51 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 	};
 
-	const displayAverageStats = (avgKills, realKD, matchCount, elo) => {
+	const displayAverageStats = (avgKills, realKD, matchCount, elo, hs, kpr, adr, rW) => {
+		function getIconLevel(elo) {
+			if (elo <= 500) {
+				return 1;
+			} else if (elo <= 750) {
+				return 2;
+			} else if (elo <= 900) {
+				return 3;
+			} else if (elo <= 1050) {
+				return 4;
+			} else if (elo <= 1200) {
+				return 5;
+			} else if (elo <= 1350) {
+				return 6;
+			} else if (elo <= 1530) {
+				return 7;
+			} else if (elo <= 1750) {
+				return 8;
+			} else if (elo <= 2000) {
+				return 9;
+			} else {
+				return 10;
+			}
+		}
+
 		const avgKillsDiv = document.getElementById('average-kills');
-		avgKillsDiv.innerHTML = `<p>Current ELO: ${elo}</p>
-														 <p>Statistic for matches: ${matchCount}</p>
-														 <p>AVG kills: ${avgKills.toFixed(2)}</p>
-														 <p>Real KD: ${realKD.toFixed(2)}</p>`;
+		avgKillsDiv.innerHTML = `
+														<div class="elo-container">
+															<h2>Current ELO: ${elo}</h2>
+															<div class="current-elo">
+																<img class="iconLevel" src="https://cdn-frontend.faceit-cdn.net/web/static/media/assets_images_skill-icons_skill_level_${getIconLevel(
+																	elo,
+																)}_svg.svg" />
+															</div>
+														</div>
+														<br>
+														<p class="stat-m">Statistic for matches: ${matchCount}</p>
+														<div class="list-cont">
+															<p>AVG kills: ${avgKills.toFixed(2)}</p>
+															<p>Real KD: ${realKD.toFixed(2)}</p>
+															<p>KPR: ${kpr.toFixed(2)}</p>
+															<p>HeadShots: ${hs.toFixed(0)}%</p>
+															${adr !== 'missing' ? `<p>ADR per ${rW} matches: ${adr.toFixed(1)}</p>` : ''}
+														</div>
+														`;
 		avgKillsDiv.style.display = 'block';
 	};
 
@@ -135,6 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (event.key === 'Enter') {
 			fetchStats();
 			document.getElementById('main-c').style.display = 'block';
+			document.getElementById('title-All-games').style.display = 'block';
 		}
 	});
 
@@ -145,5 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.getElementById('country-icon').className = '';
 		document.getElementById('games').innerHTML = '';
 		document.getElementById('average-kills').style.display = 'none';
+		document.getElementById('title-All-games').style.display = 'none';
 	});
 });

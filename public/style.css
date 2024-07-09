@@ -123,6 +123,7 @@ hr {
 	display: flex;
 	justify-content: center;
 	color: #f6f4f4;
+	margin-top: 10px;
 }
 
 .main-info {
@@ -162,20 +163,33 @@ hr {
 	align-items: center;
 }
 
+.user-info img {
+	justify-content: center;
+}
+
 .user-info img,
 .user-info .avg-container {
 	width: 300px;
 	height: 300px;
 	display: flex;
 	align-items: center;
-	justify-content: center;
-	margin: 0 10px;
+	margin: 0 10px 10px 10px;
 }
 
 .user-info .avg-container {
 	background-color: #3e3939;
-	text-align: center;
+	text-align: left;
 	color: #fff;
+	padding-left: 15px;
+}
+
+.list-cont {
+	padding-left: 10px;
+}
+
+.stat-m {
+	opacity: 0.6;
+	font-weight: 600;
 }
 
 #games {
@@ -189,6 +203,13 @@ hr {
 	margin: 0 20px;
 	font-size: 2rem;
 	background-color: #3e3939;
+	width: 400px;
+	padding: 10px;
+	border-radius: 0.5rem;
+	text-align: center; /* Центрирование содержимого внутри блока */
+	display: flex;
+	flex-direction: column;
+	align-items: center; /* Центрирование по вертикали */
 }
 
 #games div h2 {
@@ -197,11 +218,46 @@ hr {
 	text-align: center;
 }
 
+#games div img {
+	width: 2.2rem;
+	margin-top: -5px;
+	vertical-align: middle;
+}
+
 .games-container {
 	width: 100%;
 	display: flex;
 	justify-content: center;
 	margin-top: 10px;
+	margin-bottom: 100px;
 }
 
+.title-all {
+	text-align: center;
+	margin: 10px 0;
+	display: none;
+	color: #f6f4f4;
+	width: auto;
+}
+.current-elo,
+.current-elo .iconLevel {
+	width: 2.5rem;
+	height: 2.5rem;
+	vertical-align: middle;
+	margin: 0;
+}
+
+.current-elo .iconLevel {
+	margin-top: 0px;
+	margin-left: 10px;
+}
+
+#average-kills .elo-container {
+	padding: 0;
+	display: flex;
+}
+
+#average-kills .elo-container h2 {
+	font-size: 1.7rem;
+}
 /* ------ */
