@@ -8,4 +8,5 @@ You can try the [link](https://faceit-parser.vercel.app/)
 
 > Preview
 
+<img src="./assets/image2.png" />
 <img src="./assets/image.png" />
