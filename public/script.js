@@ -142,13 +142,24 @@ document.addEventListener('DOMContentLoaded', () => {
 						}
 					});
 
+					const name = matches[0].nickname;
 					const adr = totalDamage > 0 ? totalDamage / roundWadr : 'missing';
 					const avgKills = totalKills / matches.length;
 					const realKD = totalKills / totalDeaths; // K/D
 					const headShot = totalHeadShot / matches.length;
 					const kpr = totalKills / totalRounds;
 					const elo = matches[0].elo;
-					displayAverageStats(avgKills, realKD, matches.length, elo, headShot, kpr, adr, rWmatch); // Передаем количество матчей
+					displayAverageStats(
+						avgKills,
+						realKD,
+						matches.length,
+						elo,
+						headShot,
+						kpr,
+						adr,
+						rWmatch,
+						name,
+					); // Передаем информацию о матчах
 				} else {
 					console.error('Матчи не найдены или пусты:', data);
 				}
@@ -158,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 	};
 
-	const displayAverageStats = (avgKills, realKD, matchCount, elo, hs, kpr, adr, rW) => {
+	const displayAverageStats = (avgKills, realKD, matchCount, elo, hs, kpr, adr, rW, username) => {
 		function getIconLevel(elo) {
 			if (elo <= 500) {
 				return 1;
@@ -185,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		const avgKillsDiv = document.getElementById('average-kills');
 		avgKillsDiv.innerHTML = `
+														<h1 class="username">${username}</h1>
 														<div class="elo-container">
 															<h2>Current ELO: ${elo}</h2>
 															<div class="current-elo">

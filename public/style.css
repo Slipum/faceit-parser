@@ -260,4 +260,10 @@ hr {
 #average-kills .elo-container h2 {
 	font-size: 1.7rem;
 }
+
+.username {
+	font-size: 3rem;
+	color: #823a0a;
+	padding-bottom: 20px;
+}
 /* ------ */
