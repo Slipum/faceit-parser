@@ -54,23 +54,79 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (payload && payload.games) {
 					Object.keys(payload.games).forEach((gameKey) => {
 						const game = payload.games[gameKey];
-						const gameDiv = document.createElement('div');
-						gameDiv.innerHTML = `
-            <h2>${gameKey.toUpperCase()}</h2>
-            <p>Steam Name: ${game.game_name}</p>
-            <p>Faceit Elo: ${game.faceit_elo}</p>
-            <p>Region: ${game.region}</p>
-            <p>Skill Level: ${game.skill_level}</p>
-          `;
-						gamesDiv.appendChild(gameDiv);
+						if (gameKey === 'cs2' || gameKey === 'csgo') {
+							const gameDiv = document.createElement('div');
+							gameDiv.innerHTML = `
+													<h2>${gameKey.toUpperCase()}</h2>
+													<p>Steam Name: ${game.game_name}</p>
+													<p>Faceit Elo: ${game.faceit_elo}</p>
+													<p>Region: ${game.region}</p>
+													<p>Skill Level: ${game.skill_level}</p>
+											`;
+							gamesDiv.appendChild(gameDiv);
+						}
 					});
 				} else {
 					console.error('Свойство не найдено в данных:', data);
+				}
+
+				// Получение ID пользователя и запрос статистики матчей
+				const userId = payload.id;
+				fetchMatchStats(userId);
+			})
+			.catch((error) => {
+				console.error('Ошибка:', error);
+			});
+	};
+
+	const fetchMatchStats = (userId) => {
+		const params = new URLSearchParams({
+			page: '0',
+			game_mode: '5v5',
+		});
+
+		fetch(
+			`/proxy?url=https://www.faceit.com/api/stats/v1/stats/time/users/${userId}/games/cs2?${params.toString()}`,
+			{
+				method: 'GET',
+				headers: headers,
+			},
+		)
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error(`Ошибка сети: ${response.status} - ${response.statusText}`);
+				}
+				return response.json();
+			})
+			.then((data) => {
+				const matches = data;
+				if (matches && matches.length > 0) {
+					let totalKills = 0;
+					let totalDeaths = 0;
+					matches.forEach((match) => {
+						totalKills += parseInt(match.i6, 10);
+						totalDeaths += parseInt(match.i8, 10);
+					});
+					const avgKills = totalKills / matches.length;
+					const realKD = totalKills / totalDeaths; // Kill per round
+					const elo = matches[0].elo;
+					displayAverageStats(avgKills, realKD, matches.length, elo); // Передаем количество матчей
+				} else {
+					console.error('Матчи не найдены или пусты:', data);
 				}
 			})
 			.catch((error) => {
 				console.error('Ошибка:', error);
 			});
+	};
+
+	const displayAverageStats = (avgKills, realKD, matchCount, elo) => {
+		const avgKillsDiv = document.getElementById('average-kills');
+		avgKillsDiv.innerHTML = `<p>Current ELO: ${elo}</p>
+														 <p>Statistic for matches: ${matchCount}</p>
+														 <p>AVG kills: ${avgKills.toFixed(2)}</p>
+														 <p>Real KD: ${realKD.toFixed(2)}</p>`;
+		avgKillsDiv.style.display = 'block';
 	};
 
 	document.getElementById('fetchStats').addEventListener('click', fetchStats);
@@ -88,5 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.getElementById('country').textContent = '';
 		document.getElementById('country-icon').className = '';
 		document.getElementById('games').innerHTML = '';
+		document.getElementById('average-kills').style.display = 'none';
 	});
 });

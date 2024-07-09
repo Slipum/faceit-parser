@@ -136,7 +136,6 @@ hr {
 
 .main-info img {
 	width: 25%;
-	margin: 0 auto;
 }
 
 .country-info {
@@ -148,6 +147,35 @@ hr {
 .country-info i {
 	padding-top: 10px;
 	margin-right: 5px;
+}
+
+.user-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.user-info {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.user-info img,
+.user-info .avg-container {
+	width: 300px;
+	height: 300px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 10px;
+}
+
+.user-info .avg-container {
+	background-color: #3e3939;
+	text-align: center;
+	color: #fff;
 }
 
 #games {

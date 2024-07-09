@@ -1,7 +1,17 @@
 const express = require('express');
 const path = require('path');
 const axios = require('axios');
+const livereload = require('livereload');
+const connectLivereload = require('connect-livereload');
+
 const app = express();
+
+// Создаем и запускаем сервер LiveReload
+const liveReloadServer = livereload.createServer();
+liveReloadServer.watch(path.join(__dirname, 'public'));
+
+// Используем connect-livereload для вставки скрипта LiveReload в HTML
+app.use(connectLivereload());
 
 // Настройка маршрута для статических файлов
 app.use(express.static(path.join(__dirname, 'public')));
@@ -30,4 +40,11 @@ app.get('/proxy', async (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
 	console.log(`Сервер запущен на порту ${PORT}`);
+});
+
+// Сообщаем серверу LiveReload об изменениях
+liveReloadServer.server.once('connection', () => {
+	setTimeout(() => {
+		liveReloadServer.refresh('/');
+	}, 100);
 });
