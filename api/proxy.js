@@ -24,23 +24,23 @@ module.exports = async (req, res) => {
 	}
 
 	try {
-		// Проверяем наличие данных в кэше Redis
+		const startTime = Date.now();
 		const cacheKey = `cache:${targetUrl}`;
 		const cachedData = await redisClient.get(cacheKey);
 
 		if (cachedData) {
-			console.log('Cache hit');
+			console.log(`Cache hit (time: ${Date.now() - startTime}ms)`);
 			return res.json(JSON.parse(cachedData));
 		}
 
-		// Если данных нет в кэше, выполняем запрос
-		const response = await axios.get(targetUrl);
-
-		// Сохраняем данные в кэше на 1 час
+		const response = await axios.get(targetUrl, { timeout: 15000 });
 		await redisClient.set(cacheKey, JSON.stringify(response.data), {
-			EX: 3600, // Время жизни кэша в секундах
+			EX: 3600,
 		});
-		console.log('Cache miss, data saved to cache', response.data);
+		console.log(
+			`Cache miss, data saved to cache (time: ${Date.now() - startTime}ms)`,
+			response.data,
+		);
 
 		res.json(response.data);
 	} catch (error) {
