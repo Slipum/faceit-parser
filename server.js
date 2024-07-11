@@ -11,8 +11,6 @@ const app = express();
 // Создаем и запускаем сервер LiveReload
 const liveReloadServer = livereload.createServer();
 liveReloadServer.watch(path.join(__dirname, 'public'));
-
-// Используем connect-livereload для вставки скрипта LiveReload в HTML
 app.use(connectLivereload());
 
 // Настройка маршрута для статических файлов
