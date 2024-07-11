@@ -17,7 +17,13 @@ module.exports = async (req, res) => {
 
 		if (cachedData) {
 			console.log(`Cache hit (time: ${Date.now() - startTime}ms)`);
-			return res.json(JSON.parse(cachedData));
+			try {
+				const jsonData = JSON.parse(cachedData);
+				return res.json(jsonData);
+			} catch (error) {
+				console.error('Ошибка при разборе данных из кэша:', error);
+				return res.status(500).send('Ошибка при разборе данных из кэша');
+			}
 		}
 
 		console.log(`Cache miss (time: ${Date.now() - startTime}ms)`);
@@ -25,9 +31,9 @@ module.exports = async (req, res) => {
 		// Если данных нет в кэше, выполняем запрос
 		const response = await axios.get(targetUrl, { timeout: 15000 });
 
-		// Сохраняем данные в кэше на 1 час
-		await kv.set(cacheKey, JSON.stringify(response.data), {
-			ex: 3600, // Время жизни кэша в секундах
+		// Сохраняем данные в кэше Vercel KV на 1 час
+		await kv.put(cacheKey, JSON.stringify(response.data), {
+			ttl: 3600, // Время жизни кэша в секундах (ttl)
 		});
 		console.log(`Data saved to cache (time: ${Date.now() - startTime}ms)`);
 
