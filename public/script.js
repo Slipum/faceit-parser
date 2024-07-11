@@ -16,10 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	};
 
 	const fetchStats = () => {
-		const username = document.getElementById('username').value;
+		var username = document.getElementById('username').value;
 		if (!username) {
-			alert('Пожалуйста, введите никнейм пользователя.');
+			alert('Пожалуйста, введите никнейм пользователя или ссылку.');
 			return;
+		}
+		const baseURL = 'https://www.faceit.com/ru/players/';
+		if (username.startsWith(baseURL)) {
+			username = username.replace(baseURL, '');
 		}
 
 		fetch(`/proxy?url=https://www.faceit.com/api/users/v1/nicknames/${username}`, {
