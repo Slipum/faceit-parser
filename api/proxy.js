@@ -23,7 +23,7 @@ module.exports = async (req, res) => {
 		console.log(`Cache miss (time: ${Date.now() - startTime}ms)`);
 
 		// Если данных нет в кэше, выполняем запрос
-		const response = await axios.get(targetUrl);
+		const response = await axios.get(targetUrl, { timeout: 15000 });
 
 		// Сохраняем данные в кэше на 1 час
 		await kv.set(cacheKey, JSON.stringify(response.data), {
