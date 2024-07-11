@@ -3,6 +3,8 @@ const path = require('path');
 const axios = require('axios');
 const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
+const redis = require('redis');
+require('dotenv').config();
 
 const app = express();
 
@@ -15,6 +17,20 @@ app.use(connectLivereload());
 
 // Настройка маршрута для статических файлов
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Инициализация клиента Redis
+const redisClient = redis.createClient();
+
+redisClient.on('error', (err) => {
+	console.error('Ошибка Redis:', err);
+});
+
+redisClient.on('connect', () => {
+	console.log('Подключение к Redis успешно.');
+});
+
+// Подключение к Redis
+redisClient.connect().catch(console.error);
 
 // Маршрут для отправки главной страницы
 app.get('/', (req, res) => {
@@ -29,7 +45,24 @@ app.get('/proxy', async (req, res) => {
 	}
 
 	try {
+		// Проверяем наличие данных в кэше Redis
+		const cacheKey = `cache:${targetUrl}`;
+		const cachedData = await redisClient.get(cacheKey);
+
+		if (cachedData) {
+			console.log('Cache hit');
+			return res.json(JSON.parse(cachedData));
+		}
+
+		// Если данных нет в кэше, выполняем запрос
 		const response = await axios.get(targetUrl);
+
+		// Сохраняем данные в кэше на 1 час
+		await redisClient.set(cacheKey, JSON.stringify(response.data), {
+			EX: 3600, // Время жизни кэша в секундах
+		});
+		console.log('Cache miss, data saved to cache', response.data);
+
 		res.json(response.data);
 	} catch (error) {
 		console.error('Ошибка при запросе к целевому URL:', error);

@@ -64,21 +64,17 @@ document.addEventListener('DOMContentLoaded', () => {
 						if (gameKey === 'cs2' || gameKey === 'csgo') {
 							const gameDiv = document.createElement('div');
 							gameDiv.innerHTML = `
-                            <h2>${gameKey.toUpperCase()}</h2>
-                            <p>Steam Name: ${game.game_name}</p>
-                            <p>Faceit Elo: ${game.faceit_elo}</p>
-                            <p>Region: ${
-															game.region === 'EU'
-																? `<i class="fi fi-${game.region.toLowerCase()}"></i>`
-																: ''
-														} 
-														${game.region}
-														</p>
-                            <p>Skill Level: <img src="https://cdn-frontend.faceit-cdn.net/web/static/media/assets_images_skill-icons_skill_level_${
-															game.skill_level
-														}_svg.svg" /></p>
-
-                        `;
+													<h2>${gameKey.toUpperCase()}</h2>
+													<p>Steam Name: ${game.game_name}</p>
+													<p>Faceit Elo: ${game.faceit_elo}</p>
+													<p>Region: ${game.region === 'EU' ? `<i class="fi fi-${game.region.toLowerCase()}"></i>` : ''} 
+													${game.region}
+													</p>
+													<p>Skill Level: <img src="https://cdn-frontend.faceit-cdn.net/web/static/media/assets_images_skill-icons_skill_level_${
+														game.skill_level
+													}_svg.svg" /></p>
+	
+											`;
 							gamesDiv.appendChild(gameDiv);
 						}
 					});
