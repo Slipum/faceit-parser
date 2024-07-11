@@ -1,32 +1,40 @@
+const express = require('express');
 const axios = require('axios');
-const redis = require('../redisClient');
+const redis = require('redis');
+const { promisify } = require('util');
 
-module.exports = async (req, res) => {
+const app = express();
+const client = redis.createClient({
+	host: process.env.REDIS_HOST,
+	port: process.env.REDIS_PORT,
+	password: process.env.REDIS_PASSWORD,
+});
+const getAsync = promisify(client.get).bind(client);
+const setAsync = promisify(client.set).bind(client);
+
+// Маршрут для проксирования запросов
+app.get('/', async (req, res) => {
 	const targetUrl = req.query.url;
 	if (!targetUrl) {
 		return res.status(400).send('URL параметр отсутствует');
 	}
 
+	// Проверка кэша в Redis
 	try {
-		// Проверяем наличие данных в кэше Redis
-		const cacheKey = `cache:${targetUrl}`;
-		const cachedData = await redis.get(cacheKey);
-
+		const cachedData = await getAsync(targetUrl);
 		if (cachedData) {
-			console.log('Cache hit');
+			console.log('Данные найдены в Redis кэше');
 			return res.json(JSON.parse(cachedData));
 		}
 
-		// Если данных нет в кэше, выполняем запрос
+		// Если данных нет в кэше, делаем запрос и сохраняем в Redis
 		const response = await axios.get(targetUrl);
-
-		// Сохраняем данные в кэше на 1 час
-		await redis.set(cacheKey, JSON.stringify(response.data), 'EX', 3600);
-		console.log('Cache miss, data saved to cache', response.data);
-
+		await setAsync(targetUrl, JSON.stringify(response.data));
 		res.json(response.data);
 	} catch (error) {
 		console.error('Ошибка при запросе к целевому URL:', error);
 		res.status(500).send('Ошибка сервера');
 	}
-};
+});
+
+module.exports = app;
