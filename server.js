@@ -66,7 +66,7 @@ app.get('/proxy', async (req, res) => {
 		res.json(response.data);
 	} catch (error) {
 		console.error('Ошибка при запросе к целевому URL:', error);
-		res.status(500).send('Ошибка сервера');
+		res.status(500).send('Ошибка сервера: ' + error.message);
 	}
 });
 
