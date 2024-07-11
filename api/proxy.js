@@ -31,11 +31,16 @@ module.exports = async (req, res) => {
 		// Если данных нет в кэше, выполняем запрос
 		const response = await axios.get(targetUrl, { timeout: 15000 });
 
-		// Сохраняем данные в кэше Vercel KV на 1 час
-		await kv.put(cacheKey, JSON.stringify(response.data), {
-			ttl: 3600, // Время жизни кэша в секундах (ttl)
-		});
-		console.log(`Data saved to cache (time: ${Date.now() - startTime}ms)`);
+		// Убедитесь, что response.data является объектом перед сохранением в кэш
+		if (typeof response.data === 'object' && response.data !== null) {
+			await kv.put(cacheKey, JSON.stringify(response.data), {
+				ttl: 3600, // Время жизни кэша в секундах (ttl)
+			});
+			console.log(`Data saved to cache (time: ${Date.now() - startTime}ms)`);
+		} else {
+			console.error('Полученные данные не являются валидным объектом JSON');
+			return res.status(500).send('Ошибка сервера: Невалидные данные');
+		}
 
 		res.json(response.data);
 	} catch (error) {
