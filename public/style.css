@@ -267,3 +267,15 @@ hr {
 	padding-bottom: 20px;
 }
 /* ------ */
+
+.title-list-game {
+	text-align: center;
+	margin: 10px 0;
+	display: none;
+	color: #f6f4f4;
+	width: auto;
+}
+
+.list-games canvas#eloChart {
+	width: 80%;
+}

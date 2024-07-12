@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+	let eloChart = null;
+
 	const headers = {
 		accept: 'application/json, text/plain, */*',
 		'accept-language': 'ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7',
@@ -73,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
 													<p>Skill Level: <img src="https://cdn-frontend.faceit-cdn.net/web/static/media/assets_images_skill-icons_skill_level_${
 														game.skill_level
 													}_svg.svg" /></p>
-	
 											`;
 							gamesDiv.appendChild(gameDiv);
 						}
@@ -120,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					let totalDamage = 0;
 					let roundWadr = 0;
 					let rWmatch = 0;
+					let totalGame = [];
 					matches.forEach((match) => {
 						if (match.i20 !== undefined) {
 							rWmatch += 1;
@@ -130,6 +132,10 @@ document.addEventListener('DOMContentLoaded', () => {
 								const wadr2 = parseInt(allWadr[1], 10);
 								roundWadr += wadr1 + wadr2;
 							}
+						}
+
+						if (match.elo != null && match.elo !== '') {
+							totalGame.push(match.elo);
 						}
 						totalKills += parseInt(match.i6, 10);
 						totalDeaths += parseInt(match.i8, 10);
@@ -142,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						}
 					});
 
+					const listGameElo = totalGame;
 					const name = matches[0].nickname;
 					const adr = totalDamage > 0 ? totalDamage / roundWadr : 'missing';
 					const avgKills = totalKills / matches.length;
@@ -149,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					const headShot = totalHeadShot / matches.length;
 					const kpr = totalKills / totalRounds;
 					const elo = matches[0].elo;
+					displayEloChart(listGameElo);
 					displayAverageStats(
 						avgKills,
 						realKD,
@@ -196,27 +204,100 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		const avgKillsDiv = document.getElementById('average-kills');
 		avgKillsDiv.innerHTML = `
-														<h1 class="username">${username}</h1>
-														<div class="elo-container">
-															<h2>Current ELO: ${elo}</h2>
-															<div class="current-elo">
-																<img class="iconLevel" src="https://cdn-frontend.faceit-cdn.net/web/static/media/assets_images_skill-icons_skill_level_${getIconLevel(
-																	elo,
-																)}_svg.svg" />
-															</div>
-														</div>
-														<br>
-														<p class="stat-m">Statistic for matches: ${matchCount}</p>
-														<div class="list-cont">
-															<p>AVG kills: ${avgKills.toFixed(2)}</p>
-															<p>Real KD: ${realKD.toFixed(2)}</p>
-															<p>KPR: ${kpr.toFixed(2)}</p>
-															<p>HeadShots: ${hs.toFixed(0)}%</p>
-															${adr !== 'missing' ? `<p>ADR per ${rW} matches: ${adr.toFixed(1)}</p>` : ''}
-														</div>
-														`;
+					<h1 class="username">${username}</h1>
+					<div class="elo-container">
+							<h2>Current ELO: ${elo}</h2>
+							<div class="current-elo">
+									<img class="iconLevel" src="https://cdn-frontend.faceit-cdn.net/web/static/media/assets_images_skill-icons_skill_level_${getIconLevel(
+										elo,
+									)}_svg.svg" />
+							</div>
+					</div>
+					<br>
+					<p class="stat-m">Statistic for matches: ${matchCount}</p>
+					<div class="list-cont">
+							<p>AVG kills: ${avgKills.toFixed(2)}</p>
+							<p>Real KD: ${realKD.toFixed(2)}</p>
+							<p>KPR: ${kpr.toFixed(2)}</p>
+							<p>HeadShots: ${hs.toFixed(0)}%</p>
+							${adr !== 'missing' ? `<p>ADR per ${rW} matches: ${adr.toFixed(1)}</p>` : ''}
+					</div>
+			`;
 		avgKillsDiv.style.display = 'block';
 	};
+
+	// All Games
+	const displayEloChart = (listElo) => {
+		const ctx = document.getElementById('eloChart').getContext('2d');
+
+		// Находим минимальное и максимальное значения ELO
+		const minElo = Math.min(...listElo);
+		const maxElo = Math.max(...listElo);
+
+		// Определяем минимальное и максимальное значение для оси Y
+		const minYAxis = Math.floor(minElo / 100) * 100;
+		const maxYAxis = Math.ceil(maxElo / 100) * 100;
+
+		// Уничтожаем предыдущий график, если он существует
+		if (eloChart) {
+			eloChart.destroy();
+		}
+
+		eloChart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: listElo.map((_, index) => `${listElo.length - index}`).reverse(), // Метки для оси X (индексы матчей)
+				datasets: [
+					{
+						label: 'ELO',
+						data: listElo.slice().reverse(), // Данные для графика (значения ELO)
+						borderColor: 'red',
+						backgroundColor: 'red',
+						borderWidth: 2,
+						fill: false,
+						pointHoverBackgroundColor: 'white',
+						pointRadius: 5,
+						pointHoverRadius: 10,
+						hitRadius: 20,
+						hoverBorderWidth: 3,
+					},
+				],
+			},
+			options: {
+				hover: {
+					mode: 'nearest', // меняет режим наведения на ближайший
+					intersect: false,
+				},
+				scales: {
+					y: {
+						beginAtZero: false,
+						min: minYAxis,
+						max: maxYAxis,
+						ticks: {
+							stepSize: 200, // Шаг для меток на оси Y
+						},
+					},
+					x: {
+						beginAtZero: true,
+					},
+				},
+				plugins: {
+					legend: {
+						display: false, // Убираем легенду
+					},
+					tooltip: {
+						callbacks: {
+							label: function (context) {
+								return `Elo: ${context.raw}`;
+							},
+						},
+					},
+				},
+			},
+		});
+	};
+
+	// ----
 
 	document.getElementById('fetchStats').addEventListener('click', fetchStats);
 
@@ -225,6 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			fetchStats();
 			document.getElementById('main-c').style.display = 'block';
 			document.getElementById('title-All-games').style.display = 'block';
+			document.getElementById('title-list-games').style.display = 'block';
 		}
 	});
 
@@ -236,5 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.getElementById('games').innerHTML = '';
 		document.getElementById('average-kills').style.display = 'none';
 		document.getElementById('title-All-games').style.display = 'none';
+		document.getElementById('title-list-games').style.display = 'none';
+		eloChart.destroy();
 	});
 });
