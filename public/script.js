@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
 				const payload = data.payload;
 				const avatarImg = document.getElementById('avatar');
 				if (payload && payload.avatar) {
-					avatarImg.src = '';
 					avatarImg.src = payload.avatar;
 					avatarImg.style.display = 'block';
 				} else {
@@ -85,14 +84,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 				// Получение ID пользователя и запрос статистики матчей
 				const userId = payload.id;
-				fetchMatchStats(userId);
+				const currentElo = payload.games.cs2.faceit_elo;
+				fetchMatchStats(userId, currentElo);
 			})
 			.catch((error) => {
 				console.error('Ошибка:', error);
 			});
 	};
 
-	const fetchMatchStats = (userId) => {
+	const fetchMatchStats = (userId, currentElo) => {
 		const params = new URLSearchParams({
 			page: '0',
 			game_mode: '5v5',
@@ -155,18 +155,17 @@ document.addEventListener('DOMContentLoaded', () => {
 					const realKD = totalKills / totalDeaths; // K/D
 					const headShot = totalHeadShot / matches.length;
 					const kpr = totalKills / totalRounds;
-					const elo = matches[0].elo;
 					displayEloChart(listGameElo);
 					displayAverageStats(
 						avgKills,
 						realKD,
 						matches.length,
-						elo,
 						headShot,
 						kpr,
 						adr,
 						rWmatch,
 						name,
+						currentElo,
 					); // Передаем информацию о матчах
 				} else {
 					console.error('Матчи не найдены или пусты:', data);
@@ -177,25 +176,35 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 	};
 
-	const displayAverageStats = (avgKills, realKD, matchCount, elo, hs, kpr, adr, rW, username) => {
-		function getIconLevel(elo) {
-			if (elo <= 500) {
+	const displayAverageStats = (
+		avgKills,
+		realKD,
+		matchCount,
+		hs,
+		kpr,
+		adr,
+		rW,
+		username,
+		currentElo,
+	) => {
+		function getIconLevel(currentElo) {
+			if (currentElo <= 500) {
 				return 1;
-			} else if (elo <= 750) {
+			} else if (currentElo <= 750) {
 				return 2;
-			} else if (elo <= 900) {
+			} else if (currentElo <= 900) {
 				return 3;
-			} else if (elo <= 1050) {
+			} else if (currentElo <= 1050) {
 				return 4;
-			} else if (elo <= 1200) {
+			} else if (currentElo <= 1200) {
 				return 5;
-			} else if (elo <= 1350) {
+			} else if (currentElo <= 1350) {
 				return 6;
-			} else if (elo <= 1530) {
+			} else if (currentElo <= 1530) {
 				return 7;
-			} else if (elo <= 1750) {
+			} else if (currentElo <= 1750) {
 				return 8;
-			} else if (elo <= 2000) {
+			} else if (currentElo <= 2000) {
 				return 9;
 			} else {
 				return 10;
@@ -206,10 +215,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		avgKillsDiv.innerHTML = `
 					<h1 class="username">${username}</h1>
 					<div class="elo-container">
-							<h2>Current ELO: ${elo}</h2>
+							<h2>Current ELO: ${currentElo}</h2>
 							<div class="current-elo">
 									<img class="iconLevel" src="https://cdn-frontend.faceit-cdn.net/web/static/media/assets_images_skill-icons_skill_level_${getIconLevel(
-										elo,
+										currentElo,
 									)}_svg.svg" />
 							</div>
 					</div>
@@ -319,6 +328,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.getElementById('average-kills').style.display = 'none';
 		document.getElementById('title-All-games').style.display = 'none';
 		document.getElementById('title-list-games').style.display = 'none';
-		eloChart.destroy();
+		if (eloChart) {
+			eloChart.destroy();
+		}
 	});
 });
