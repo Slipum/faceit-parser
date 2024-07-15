@@ -175,6 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
 							const changeClass = eloChange > 0 ? 'elo-positive' : 'elo-negative';
 							return `<span class="${changeClass}">${currentElo} ${changeText}</span>`;
 						}
+
 						const eloDisplay =
 							match.elo !== undefined
 								? getEloChange(match.elo, previousElo)
@@ -197,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
 									<td>${eloDisplay}</td>
 							`;
 						mc -= 1;
-						console.log(match.i1);
 						matchesTableBody.appendChild(matchRow);
 
 						if (match.i20 !== undefined) {
