@@ -190,20 +190,25 @@ document.addEventListener('DOMContentLoaded', () => {
 						previousElo = match.elo;
 
 						matchRow.innerHTML = `
-									<td>${mc}</td>
-									<td>${new Date(match.date).toLocaleDateString()}</td>
-									<td>${match.i1 !== undefined ? getIconMap(img) : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-									<td>${match.i18 !== undefined ? match.i18 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-									<td>${match.i6 !== undefined ? match.i6 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-									<td>${match.i7 !== undefined ? match.i7 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-									<td>${match.i8 !== undefined ? match.i8 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-									<td class='${match.c2 >= 1 ? (match.c2 >= 1.3 ? 'td-solid-green' : 'td-green') : 'td-red'}'>
-									${match.c2 !== undefined ? match.c2 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-									<td class='${match.c3 >= 0.75 ? (match.c3 >= 0.9 ? 'td-solid-green' : 'td-green') : 'td-red'}'>
-									${match.c3 !== undefined ? match.c3 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-									<td class='${match.c10 >= 80 ? (match.c10 >= 100 ? 'td-solid-green' : 'td-green') : 'td-red'}'>
-									${match.c10 !== undefined ? match.c10 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-									<td>${eloDisplay}</td>
+							<td>${mc}</td>
+							<td class='date'>${new Date(match.date).toLocaleDateString()}<p>(${new Date(
+							match.date,
+						).toLocaleTimeString([], {
+							hour: '2-digit',
+							minute: '2-digit',
+						})})</p></td>
+							<td>${match.i1 !== undefined ? getIconMap(img) : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+							<td>${match.i18 !== undefined ? match.i18 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+							<td>${match.i6 !== undefined ? match.i6 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+							<td>${match.i7 !== undefined ? match.i7 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+							<td>${match.i8 !== undefined ? match.i8 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+							<td class='${match.c2 >= 1 ? (match.c2 >= 1.3 ? 'td-solid-green' : 'td-green') : 'td-red'}'>
+							${match.c2 !== undefined ? match.c2 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+							<td class='${match.c3 >= 0.75 ? (match.c3 >= 0.9 ? 'td-solid-green' : 'td-green') : 'td-red'}'>
+							${match.c3 !== undefined ? match.c3 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+							<td class='${match.c10 >= 80 ? (match.c10 >= 100 ? 'td-solid-green' : 'td-green') : 'td-red'}'>
+							${match.c10 !== undefined ? match.c10 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+							<td>${eloDisplay}</td>
 							`;
 						mc += 1;
 

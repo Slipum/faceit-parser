@@ -371,6 +371,10 @@ tbody tr td {
 	font-weight: 600;
 }
 
+#matches tbody td p {
+	opacity: 0.4;
+}
+
 #matches tbody td img {
 	width: 70px;
 }
