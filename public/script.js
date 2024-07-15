@@ -411,6 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	document.getElementById('clearStats').addEventListener('click', () => {
+		document.getElementById('main-c').style.display = 'none';
 		document.getElementById('user-back').style.backgroundImage = '';
 		document.getElementById('matches').innerHTML = '';
 		document.getElementById('title-All-matches').style.display = 'none';
