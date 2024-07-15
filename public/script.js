@@ -136,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 									<th>Kills</th>
 									<th>Assists</th>
 									<th>Deaths</th>
+									<th>K/D</th>
 									<th>K/R</th>
 									<th>ADR</th>
 									<th>ELO</th>
@@ -155,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 									<td>${match.i6 !== undefined ? match.i6 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 									<td>${match.i7 !== undefined ? match.i7 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 									<td>${match.i8 !== undefined ? match.i8 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+									<td>${match.c2 !== undefined ? match.c2 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 									<td>${match.c3 !== undefined ? match.c3 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 									<td>${match.c10 !== undefined ? match.c10 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 									<td>${match.elo !== undefined ? match.elo : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
