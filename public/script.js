@@ -48,6 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
 					avatarImg.src = './assets/Group1.png';
 					avatarImg.style.display = 'block';
 				}
+				if (payload.cover_image_url) {
+					const userBackElement = document.getElementById('user-back');
+					userBackElement.style.backgroundImage = `url('${payload.cover_image_url}')`;
+				}
 				const country = document.getElementById('country');
 				const icon = document.getElementById('country-icon');
 				if (payload && payload.country) {
@@ -407,6 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	document.getElementById('clearStats').addEventListener('click', () => {
+		document.getElementById('user-back').style.backgroundImage = '';
 		document.getElementById('matches').innerHTML = '';
 		document.getElementById('title-All-matches').style.display = 'none';
 		document.getElementById('username').value = '';

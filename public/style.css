@@ -15,7 +15,7 @@ a {
 }
 
 hr {
-	margin: 5px 0;
+	margin: 3px 0;
 	border: 5px solid #2c2727;
 }
 
@@ -135,8 +135,12 @@ tbody tr td {
 	justify-content: center;
 	text-align: center;
 	width: 80%;
+	margin-top: 20px;
+}
+
+.main-info .country-info,
+.main-info hr {
 	background-color: #3e3939;
-	padding-top: 20px;
 }
 
 .main-info img {
@@ -156,15 +160,29 @@ tbody tr td {
 
 .user-container {
 	display: flex;
+	position: relative;
 	justify-content: center;
 	align-items: center;
+	padding: 20px 0 10px 0;
+	background-color: #3e3939;
 	width: 100%;
+}
+
+.overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.6);
+	pointer-events: none;
 }
 
 .user-info {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	z-index: 9;
 }
 
 .user-info img {
@@ -181,7 +199,6 @@ tbody tr td {
 }
 
 .user-info .avg-container {
-	background-color: #3e3939;
 	text-align: left;
 	color: #fff;
 	padding-left: 15px;
