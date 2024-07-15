@@ -19,6 +19,10 @@ hr {
 	border: 5px solid #2c2727;
 }
 
+tbody tr td {
+	margin-right: 5px;
+}
+
 /* HEADER */
 
 .header-container {
@@ -239,6 +243,7 @@ hr {
 	color: #f6f4f4;
 	width: auto;
 }
+
 .current-elo,
 .current-elo .iconLevel {
 	width: 2.5rem;
@@ -276,6 +281,73 @@ hr {
 	width: auto;
 }
 
-.list-games canvas#eloChart {
+.list-games {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.chart-container {
 	width: 80%;
+	height: 400px;
+	margin: 0 auto;
+}
+
+.list-games canvas#eloChart {
+	width: 100%;
+	height: auto;
+}
+
+/* Matches table styles */
+
+.fa-rectangle-xmark {
+	color: #823a0a;
+}
+
+.matches-container {
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
+}
+
+#matches {
+	width: 80%;
+}
+
+#matches table {
+	width: 100%;
+	border-collapse: collapse;
+	background-color: #3e3939;
+	color: #fff;
+	margin-bottom: 50px;
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+#matches th,
+#matches td {
+	padding: 12px 15px;
+	text-align: center;
+}
+
+#matches thead {
+	background-color: #cf6116;
+}
+
+#matches thead th {
+	font-weight: bold;
+	color: #f6f4f4;
+}
+
+#matches tbody tr:nth-child(even) {
+	background-color: #454040;
+}
+
+#matches tbody tr:hover {
+	background-color: #cf6116;
+	color: #f6f4f4;
+}
+
+#matches tbody td {
+	border-bottom: 1px solid #454040;
 }

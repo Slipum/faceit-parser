@@ -122,7 +122,47 @@ document.addEventListener('DOMContentLoaded', () => {
 					let roundWadr = 0;
 					let rWmatch = 0;
 					let totalGame = [];
+					// Display match details
+					let mc = 100;
+					const matchesDiv = document.getElementById('matches');
+					matchesDiv.innerHTML = `
+						<table>
+							<thead>
+								<tr>
+									<th>Match</th>
+									<th>Date</th>
+									<th>Map</th>
+									<th>Score</th>
+									<th>Kills</th>
+									<th>Assists</th>
+									<th>Deaths</th>
+									<th>K/R</th>
+									<th>ADR</th>
+									<th>ELO</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>`;
+					const matchesTableBody = matchesDiv.querySelector('tbody');
 					matches.forEach((match) => {
+						const matchRow = document.createElement('tr');
+						matchRow.innerHTML = `
+									<td>${mc}</td>
+									<td>${new Date(match.date).toLocaleDateString()}</td>
+									<td>${match.i1 !== undefined ? match.i1 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+									<td>${match.i18 !== undefined ? match.i18 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+									<td>${match.i6 !== undefined ? match.i6 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+									<td>${match.i7 !== undefined ? match.i7 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+									<td>${match.i8 !== undefined ? match.i8 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+									<td>${match.c3 !== undefined ? match.c3 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+									<td>${match.c10 !== undefined ? match.c10 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+									<td>${match.elo !== undefined ? match.elo : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+							`;
+						mc -= 1;
+						console.log(match.i1);
+						matchesTableBody.appendChild(matchRow);
+
 						if (match.i20 !== undefined) {
 							rWmatch += 1;
 							totalDamage += parseInt(match.i20, 10);
@@ -273,6 +313,8 @@ document.addEventListener('DOMContentLoaded', () => {
 				],
 			},
 			options: {
+				responsive: true,
+				maintainAspectRatio: false,
 				hover: {
 					mode: 'nearest', // меняет режим наведения на ближайший
 					intersect: false,
@@ -315,11 +357,14 @@ document.addEventListener('DOMContentLoaded', () => {
 			fetchStats();
 			document.getElementById('main-c').style.display = 'block';
 			document.getElementById('title-All-games').style.display = 'block';
+			document.getElementById('title-All-matches').style.display = 'block';
 			document.getElementById('title-list-games').style.display = 'block';
 		}
 	});
 
 	document.getElementById('clearStats').addEventListener('click', () => {
+		document.getElementById('matches').innerHTML = '';
+		document.getElementById('title-All-matches').style.display = 'none';
 		document.getElementById('username').value = '';
 		document.getElementById('avatar').style.display = 'none';
 		document.getElementById('country').textContent = '';
