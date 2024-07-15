@@ -358,10 +358,12 @@ tbody tr td {
 	width: 70px;
 }
 
+.elo-negative,
 .td-red {
 	color: rgba(255, 0, 0, 0.7);
 }
 
+.elo-positive,
 .td-green {
 	color: rgba(0, 255, 0, 0.7);
 }

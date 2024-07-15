@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					let rWmatch = 0;
 					let totalGame = [];
 					// Display match details
-					let mc = 100;
+					let mc = 1;
 					const matchesDiv = document.getElementById('matches');
 					matchesDiv.innerHTML = `
 						<table>
@@ -147,25 +147,28 @@ document.addEventListener('DOMContentLoaded', () => {
 						</table>`;
 					let previousElo = null;
 					const matchesTableBody = matchesDiv.querySelector('tbody');
-					matches.forEach((match) => {
+					matches.reverse();
+					const rows = matches.map((match, index) => {
 						const matchRow = document.createElement('tr');
 						let img = match.i1;
 						function getIconMap(map) {
-							if (map == 'de_mirage') {
-								return '<img src="https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7fb7d725-e44d-4e3c-b557-e1d19b260ab8_1695819144685.jpeg" />';
-							} else if (map == 'de_vertigo') {
-								return '<img src="https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/3bf25224-baee-44c2-bcd4-f1f72d0bbc76_1695819180008.jpeg" />';
-							} else if (map == 'de_ancient') {
-								return '<img src="https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/5b844241-5b15-45bf-a304-ad6df63b5ce5_1695819190976.jpeg" />';
-							} else if (map == 'de_dust2') {
-								return '<img src="https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7c17caa9-64a6-4496-8a0b-885e0f038d79_1695819126962.jpeg" />';
-							} else if (map == 'de_anubis') {
-								return '<img src="https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/31f01daf-e531-43cf-b949-c094ebc9b3ea_1695819235255.jpeg" />';
-							} else if (map == 'de_nuke') {
-								return '<img src="https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7197a969-81e4-4fef-8764-55f46c7cec6e_1695819158849.jpeg" />';
-							} else if (map == 'de_inferno') {
-								return '<img src="https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/993380de-bb5b-4aa1-ada9-a0c1741dc475_1695819220797.jpeg" />';
-							}
+							const maps = {
+								de_mirage:
+									'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7fb7d725-e44d-4e3c-b557-e1d19b260ab8_1695819144685.jpeg',
+								de_vertigo:
+									'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/3bf25224-baee-44c2-bcd4-f1f72d0bbc76_1695819180008.jpeg',
+								de_ancient:
+									'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/5b844241-5b15-45bf-a304-ad6df63b5ce5_1695819190976.jpeg',
+								de_dust2:
+									'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7c17caa9-64a6-4496-8a0b-885e0f038d79_1695819126962.jpeg',
+								de_anubis:
+									'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/31f01daf-e531-43cf-b949-c094ebc9b3ea_1695819235255.jpeg',
+								de_nuke:
+									'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7197a969-81e4-4fef-8764-55f46c7cec6e_1695819158849.jpeg',
+								de_inferno:
+									'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/993380de-bb5b-4aa1-ada9-a0c1741dc475_1695819220797.jpeg',
+							};
+							return `<img src="${maps[map] || ''}" />`;
 						}
 
 						function getEloChange(currentElo, previousElo) {
@@ -181,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 								? getEloChange(match.elo, previousElo)
 								: '<i class="fa-solid fa-rectangle-xmark"></i>';
 						previousElo = match.elo;
+
 						matchRow.innerHTML = `
 									<td>${mc}</td>
 									<td>${new Date(match.date).toLocaleDateString()}</td>
@@ -197,8 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
 									${match.c10 !== undefined ? match.c10 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 									<td>${eloDisplay}</td>
 							`;
-						mc -= 1;
-						matchesTableBody.appendChild(matchRow);
+						mc += 1;
 
 						if (match.i20 !== undefined) {
 							rWmatch += 1;
@@ -223,6 +226,10 @@ document.addEventListener('DOMContentLoaded', () => {
 							const round2 = parseInt(rounds[1], 10);
 							totalRounds += round1 + round2;
 						}
+						return matchRow;
+					});
+					rows.reverse().forEach((row) => {
+						matchesTableBody.appendChild(row);
 					});
 
 					const listGameElo = totalGame;
@@ -336,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				datasets: [
 					{
 						label: 'ELO',
-						data: listElo.slice().reverse(), // Данные для графика (значения ELO)
+						data: listElo.slice(), // Данные для графика (значения ELO)
 						borderColor: 'red',
 						backgroundColor: 'red',
 						borderWidth: 2,
