@@ -332,10 +332,11 @@ tbody tr td {
 
 #matches thead {
 	background-color: #cf6116;
+	box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
 }
 
 #matches thead th {
-	font-weight: bold;
+	font-weight: 700;
 	color: #f6f4f4;
 }
 
@@ -344,10 +345,28 @@ tbody tr td {
 }
 
 #matches tbody tr:hover {
-	background-color: #cf6116;
+	background-color: rgba(173, 83, 23, 0.24);
 	color: #f6f4f4;
 }
 
 #matches tbody td {
 	border-bottom: 1px solid #454040;
+	font-weight: 600;
+}
+
+#matches tbody td img {
+	width: 70px;
+}
+
+.td-red {
+	color: rgba(255, 0, 0, 0.7);
+}
+
+.td-green {
+	color: rgba(0, 255, 0, 0.7);
+}
+
+#matches tbody .td-solid-green {
+	color: rgb(0, 255, 0);
+	font-weight: 600;
 }

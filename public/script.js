@@ -145,21 +145,56 @@ document.addEventListener('DOMContentLoaded', () => {
 							<tbody>
 							</tbody>
 						</table>`;
+					let previousElo = null;
 					const matchesTableBody = matchesDiv.querySelector('tbody');
 					matches.forEach((match) => {
 						const matchRow = document.createElement('tr');
+						let img = match.i1;
+						function getIconMap(map) {
+							if (map == 'de_mirage') {
+								return '<img src="https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7fb7d725-e44d-4e3c-b557-e1d19b260ab8_1695819144685.jpeg" />';
+							} else if (map == 'de_vertigo') {
+								return '<img src="https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/3bf25224-baee-44c2-bcd4-f1f72d0bbc76_1695819180008.jpeg" />';
+							} else if (map == 'de_ancient') {
+								return '<img src="https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/5b844241-5b15-45bf-a304-ad6df63b5ce5_1695819190976.jpeg" />';
+							} else if (map == 'de_dust2') {
+								return '<img src="https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7c17caa9-64a6-4496-8a0b-885e0f038d79_1695819126962.jpeg" />';
+							} else if (map == 'de_anubis') {
+								return '<img src="https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/31f01daf-e531-43cf-b949-c094ebc9b3ea_1695819235255.jpeg" />';
+							} else if (map == 'de_nuke') {
+								return '<img src="https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7197a969-81e4-4fef-8764-55f46c7cec6e_1695819158849.jpeg" />';
+							} else if (map == 'de_inferno') {
+								return '<img src="https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/993380de-bb5b-4aa1-ada9-a0c1741dc475_1695819220797.jpeg" />';
+							}
+						}
+
+						function getEloChange(currentElo, previousElo) {
+							if (previousElo === null) return currentElo;
+							const eloChange = currentElo - previousElo;
+							const changeText = eloChange > 0 ? `(+${eloChange})` : `(${eloChange})`;
+							const changeClass = eloChange > 0 ? 'elo-positive' : 'elo-negative';
+							return `<span class="${changeClass}">${currentElo} ${changeText}</span>`;
+						}
+						const eloDisplay =
+							match.elo !== undefined
+								? getEloChange(match.elo, previousElo)
+								: '<i class="fa-solid fa-rectangle-xmark"></i>';
+						previousElo = match.elo;
 						matchRow.innerHTML = `
 									<td>${mc}</td>
 									<td>${new Date(match.date).toLocaleDateString()}</td>
-									<td>${match.i1 !== undefined ? match.i1 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+									<td>${match.i1 !== undefined ? getIconMap(img) : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 									<td>${match.i18 !== undefined ? match.i18 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 									<td>${match.i6 !== undefined ? match.i6 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 									<td>${match.i7 !== undefined ? match.i7 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 									<td>${match.i8 !== undefined ? match.i8 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-									<td>${match.c2 !== undefined ? match.c2 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-									<td>${match.c3 !== undefined ? match.c3 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-									<td>${match.c10 !== undefined ? match.c10 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-									<td>${match.elo !== undefined ? match.elo : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+									<td class='${match.c2 >= 1 ? (match.c2 >= 1.3 ? 'td-solid-green' : 'td-green') : 'td-red'}'>
+									${match.c2 !== undefined ? match.c2 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+									<td class='${match.c3 >= 0.75 ? (match.c3 >= 0.9 ? 'td-solid-green' : 'td-green') : 'td-red'}'>
+									${match.c3 !== undefined ? match.c3 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+									<td class='${match.c10 >= 80 ? (match.c10 >= 100 ? 'td-solid-green' : 'td-green') : 'td-red'}'>
+									${match.c10 !== undefined ? match.c10 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+									<td>${eloDisplay}</td>
 							`;
 						mc -= 1;
 						console.log(match.i1);
