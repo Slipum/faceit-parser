@@ -152,7 +152,16 @@ document.addEventListener('DOMContentLoaded', () => {
 					let previousElo = null;
 					const matchesTableBody = matchesDiv.querySelector('tbody');
 					matches.reverse();
+
+					const today = new Date();
+					const oneDayAgo = new Date(today);
+					oneDayAgo.setDate(today.getDate() - 1);
+
+					let wins = 0;
+					let totalMatchesToday = 0;
+
 					const rows = matches.map((match, index) => {
+						const matchDate = new Date(match.date);
 						const matchRow = document.createElement('tr');
 						let img = match.i1;
 						function getIconMap(map) {
@@ -180,6 +189,12 @@ document.addEventListener('DOMContentLoaded', () => {
 							const eloChange = currentElo - previousElo;
 							const changeText = eloChange > 0 ? `(+${eloChange})` : `(${eloChange})`;
 							const changeClass = eloChange > 0 ? 'elo-positive' : 'elo-negative';
+							if (matchDate >= oneDayAgo && matchDate <= today) {
+								totalMatchesToday++;
+								if (eloChange > 0) {
+									wins++;
+								}
+							}
 							return `<span class="${changeClass}">${currentElo} ${changeText}</span>`;
 						}
 
@@ -190,7 +205,9 @@ document.addEventListener('DOMContentLoaded', () => {
 						previousElo = match.elo;
 
 						matchRow.innerHTML = `
-							<td>${mc}</td>
+							<td><a href="https://www.faceit.com/ru/cs2/room/${
+								match.matchId
+							}/scoreboard" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-up-right-from-square"></i></a> ${mc}</td>
 							<td class='date'>${new Date(match.date).toLocaleDateString()}<p>(${new Date(
 							match.date,
 						).toLocaleTimeString([], {
@@ -202,11 +219,35 @@ document.addEventListener('DOMContentLoaded', () => {
 							<td>${match.i6 !== undefined ? match.i6 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 							<td>${match.i7 !== undefined ? match.i7 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 							<td>${match.i8 !== undefined ? match.i8 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-							<td class='${match.c2 >= 1 ? (match.c2 >= 1.3 ? 'td-solid-green' : 'td-green') : 'td-red'}'>
+							<td class='${
+								match.c2 >= 1
+									? match.c2 >= 1.3
+										? 'td-solid-green'
+										: 'td-green'
+									: match.c2 <= 0.7
+									? 'td-solid-red'
+									: 'td-red'
+							}'>
 							${match.c2 !== undefined ? match.c2 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-							<td class='${match.c3 >= 0.75 ? (match.c3 >= 0.9 ? 'td-solid-green' : 'td-green') : 'td-red'}'>
+							<td class='${
+								match.c3 >= 0.75
+									? match.c3 >= 0.9
+										? 'td-solid-green'
+										: 'td-green'
+									: match.c3 <= 0.5
+									? 'td-solid-red'
+									: 'td-red'
+							}'>
 							${match.c3 !== undefined ? match.c3 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
-							<td class='${match.c10 >= 80 ? (match.c10 >= 100 ? 'td-solid-green' : 'td-green') : 'td-red'}'>
+							<td class='${
+								match.c10 >= 80
+									? match.c10 >= 100
+										? 'td-solid-green'
+										: 'td-green'
+									: match.c10 <= 60
+									? 'td-solid-red'
+									: 'td-red'
+							}'>
 							${match.c10 !== undefined ? match.c10 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 							<td>${eloDisplay}</td>
 							`;
@@ -237,6 +278,11 @@ document.addEventListener('DOMContentLoaded', () => {
 						}
 						return matchRow;
 					});
+
+					// Display win/total matches for the last day
+					const statsDiv = document.getElementById('won-matches');
+					statsDiv.innerHTML = `<p>Won matches in the last session: ${wins}/${totalMatchesToday}</p>`;
+
 					rows.reverse().forEach((row) => {
 						matchesTableBody.appendChild(row);
 					});
