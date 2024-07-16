@@ -153,10 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
 					const matchesTableBody = matchesDiv.querySelector('tbody');
 					matches.reverse();
 
-					const today = new Date();
-					const oneDayAgo = new Date(today);
-					oneDayAgo.setDate(today.getDate() - 1);
-
 					let lastSessionDate = null;
 					let wins = 0;
 					let totalMatchesToday = 0;
@@ -193,9 +189,14 @@ document.addEventListener('DOMContentLoaded', () => {
 							matchDate = new Date(matchDate);
 						}
 
+						const sessionThresholdHours = 5; // Количество часов для объединения сессий
+						const sessionThreshold = new Date(matchDate);
+						sessionThreshold.setHours(sessionThreshold.getHours() - sessionThresholdHours);
+
 						if (
 							lastSessionDate === null ||
-							matchDate.toDateString() !== lastSessionDate.toDateString()
+							(matchDate.toDateString() !== lastSessionDate.toDateString() &&
+								matchDate > sessionThreshold)
 						) {
 							lastSessionDate = matchDate;
 							wins = 0;
@@ -319,8 +320,11 @@ document.addEventListener('DOMContentLoaded', () => {
 						previousElo = match.elo;
 						return total;
 					}, 0);
-					const eloGainsText = eloGains > 0 ? `+${eloGains}` : `${eloGains}`;
-					statsDiv.innerHTML = `<p>Won matches in the last session: ${sessionStats.wins}/${sessionStats.totalMatches}</p><p>ELO gained in the last session: ${eloGainsText}</p>`;
+					const eloGainsText =
+						eloGains > 0
+							? `<p style="padding-left: 10px" class="elo-positive">+${eloGains}</p>`
+							: `<p style="padding-left: 10px" class="elo-negative">${eloGains}</p>`;
+					statsDiv.innerHTML = `<p>Won matches in the last session: ${sessionStats.wins}/${sessionStats.totalMatches}</p><div style="display: flex">ELO gained in the last session: ${eloGainsText}</div>`;
 
 					rows.reverse().forEach((row) => {
 						matchesTableBody.appendChild(row);
