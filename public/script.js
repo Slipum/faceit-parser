@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					country.style.display = 'none';
 				}
 				const gamesDiv = document.getElementById('games');
-				gamesDiv.innerHTML = ''; // Очистить предыдущие результаты
+				gamesDiv.innerHTML = '';
 				if (payload && payload.games) {
 					Object.keys(payload.games).forEach((gameKey) => {
 						const game = payload.games[gameKey];
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					let roundWadr = 0;
 					let rWmatch = 0;
 					let totalGame = [];
-					// Display match details
+					// Отображения статистики матчей
 					let mc = 1;
 					const matchesDiv = document.getElementById('matches');
 					matchesDiv.innerHTML = `
@@ -157,50 +157,75 @@ document.addEventListener('DOMContentLoaded', () => {
 					const oneDayAgo = new Date(today);
 					oneDayAgo.setDate(today.getDate() - 1);
 
+					let lastSessionDate = null;
 					let wins = 0;
 					let totalMatchesToday = 0;
 
-					const rows = matches.map((match, index) => {
-						const matchDate = new Date(match.date);
-						const matchRow = document.createElement('tr');
-						let img = match.i1;
-						function getIconMap(map) {
-							const maps = {
-								de_mirage:
-									'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7fb7d725-e44d-4e3c-b557-e1d19b260ab8_1695819144685.jpeg',
-								de_vertigo:
-									'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/3bf25224-baee-44c2-bcd4-f1f72d0bbc76_1695819180008.jpeg',
-								de_ancient:
-									'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/5b844241-5b15-45bf-a304-ad6df63b5ce5_1695819190976.jpeg',
-								de_dust2:
-									'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7c17caa9-64a6-4496-8a0b-885e0f038d79_1695819126962.jpeg',
-								de_anubis:
-									'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/31f01daf-e531-43cf-b949-c094ebc9b3ea_1695819235255.jpeg',
-								de_nuke:
-									'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7197a969-81e4-4fef-8764-55f46c7cec6e_1695819158849.jpeg',
-								de_inferno:
-									'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/993380de-bb5b-4aa1-ada9-a0c1741dc475_1695819220797.jpeg',
-							};
-							return `<img src="${maps[map] || ''}" />`;
+					function getIconMap(map) {
+						const maps = {
+							de_mirage:
+								'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7fb7d725-e44d-4e3c-b557-e1d19b260ab8_1695819144685.jpeg',
+							de_vertigo:
+								'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/3bf25224-baee-44c2-bcd4-f1f72d0bbc76_1695819180008.jpeg',
+							de_ancient:
+								'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/5b844241-5b15-45bf-a304-ad6df63b5ce5_1695819190976.jpeg',
+							de_dust2:
+								'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7c17caa9-64a6-4496-8a0b-885e0f038d79_1695819126962.jpeg',
+							de_anubis:
+								'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/31f01daf-e531-43cf-b949-c094ebc9b3ea_1695819235255.jpeg',
+							de_nuke:
+								'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7197a969-81e4-4fef-8764-55f46c7cec6e_1695819158849.jpeg',
+							de_inferno:
+								'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/993380de-bb5b-4aa1-ada9-a0c1741dc475_1695819220797.jpeg',
+						};
+						return `<img src="${maps[map] || ''}" />`;
+					}
+
+					// Функция для вычисления изменений Elo
+					function getEloChange(currentElo, previousElo, matchDate) {
+						if (previousElo === null) return currentElo;
+
+						const eloChange = currentElo - previousElo;
+						const changeText = eloChange > 0 ? `(+${eloChange})` : `(${eloChange})`;
+						const changeClass = eloChange > 0 ? 'elo-positive' : 'elo-negative';
+
+						if (!(matchDate instanceof Date)) {
+							matchDate = new Date(matchDate);
 						}
 
-						function getEloChange(currentElo, previousElo) {
-							if (previousElo === null) return currentElo;
-							const eloChange = currentElo - previousElo;
-							const changeText = eloChange > 0 ? `(+${eloChange})` : `(${eloChange})`;
-							const changeClass = eloChange > 0 ? 'elo-positive' : 'elo-negative';
-							if (matchDate >= oneDayAgo && matchDate <= today) {
-								totalMatchesToday++;
-								if (eloChange > 0) {
-									wins++;
-								}
-							}
-							return `<span class="${changeClass}">${currentElo} ${changeText}</span>`;
+						if (
+							lastSessionDate === null ||
+							matchDate.toDateString() !== lastSessionDate.toDateString()
+						) {
+							lastSessionDate = matchDate;
+							wins = 0;
+							totalMatchesToday = 0;
 						}
+
+						totalMatchesToday++;
+						if (eloChange > 0) {
+							wins++;
+						}
+
+						return `<span class="${changeClass}">${currentElo} ${changeText}</span>`;
+					}
+
+					// Функция для получения статистики последней сессии
+					function getLastSessionStats() {
+						return {
+							date: lastSessionDate,
+							wins: wins,
+							totalMatches: totalMatchesToday,
+						};
+					}
+
+					const rows = matches.map((match, index) => {
+						const matchRow = document.createElement('tr');
+						let img = match.i1;
 
 						const eloDisplay =
 							match.elo !== undefined
-								? getEloChange(match.elo, previousElo)
+								? getEloChange(match.elo, previousElo, match.date)
 								: '<i class="fa-solid fa-rectangle-xmark"></i>';
 						previousElo = match.elo;
 
@@ -251,6 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
 							${match.c10 !== undefined ? match.c10 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 							<td>${eloDisplay}</td>
 							`;
+
 						mc += 1;
 
 						if (match.i20 !== undefined) {
@@ -279,9 +305,22 @@ document.addEventListener('DOMContentLoaded', () => {
 						return matchRow;
 					});
 
-					// Display win/total matches for the last day
+					// Отображение статистики последней игровой сессии
 					const statsDiv = document.getElementById('won-matches');
-					statsDiv.innerHTML = `<p>Won matches in the last session: ${wins}/${totalMatchesToday}</p>`;
+					const sessionStats = getLastSessionStats();
+					const eloGains = matches.reduce((total, match) => {
+						const matchDate = new Date(match.date);
+						if (lastSessionDate && matchDate.toDateString() === lastSessionDate.toDateString()) {
+							if (match.elo !== undefined && previousElo !== null) {
+								const eloChange = match.elo - previousElo;
+								total += eloChange;
+							}
+						}
+						previousElo = match.elo;
+						return total;
+					}, 0);
+					const eloGainsText = eloGains > 0 ? `+${eloGains}` : `${eloGains}`;
+					statsDiv.innerHTML = `<p>Won matches in the last session: ${sessionStats.wins}/${sessionStats.totalMatches}</p><p>ELO gained in the last session: ${eloGainsText}</p>`;
 
 					rows.reverse().forEach((row) => {
 						matchesTableBody.appendChild(row);
@@ -305,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						rWmatch,
 						name,
 						currentElo,
-					); // Передаем информацию о матчах
+					);
 				} else {
 					console.error('Матчи не найдены или пусты:', data);
 				}
@@ -386,7 +425,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		const minYAxis = Math.floor(minElo / 100) * 100;
 		const maxYAxis = Math.ceil(maxElo / 100) * 100;
 
-		// Уничтожаем предыдущий график, если он существует
 		if (eloChart) {
 			eloChart.destroy();
 		}
@@ -415,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				responsive: true,
 				maintainAspectRatio: false,
 				hover: {
-					mode: 'nearest', // меняет режим наведения на ближайший
+					mode: 'nearest',
 					intersect: false,
 				},
 				scales: {
@@ -463,6 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	document.getElementById('clearStats').addEventListener('click', () => {
 		document.getElementById('main-c').style.display = 'none';
+		document.getElementById('won-matches').innerHTML = '';
 		document.getElementById('user-back').style.backgroundImage = '';
 		document.getElementById('matches').innerHTML = '';
 		document.getElementById('title-All-matches').style.display = 'none';
