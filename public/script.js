@@ -126,8 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
 					let roundWadr = 0;
 					let rWmatch = 0;
 					let totalGame = [];
-					// Отображения статистики матчей
 					let mc = 1;
+
 					const matchesDiv = document.getElementById('matches');
 					matchesDiv.innerHTML = `
 						<table>
