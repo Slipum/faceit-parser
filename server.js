@@ -8,15 +8,11 @@ require('dotenv').config();
 
 const app = express();
 
-// Создаем и запускаем сервер LiveReload
 const liveReloadServer = livereload.createServer();
 liveReloadServer.watch(path.join(__dirname, 'public'));
 app.use(connectLivereload());
-
-// Настройка маршрута для статических файлов
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Инициализация клиента Redis
 const redisClient = redis.createClient();
 
 redisClient.on('error', (err) => {
@@ -43,7 +39,6 @@ app.get('/proxy', async (req, res) => {
 	}
 
 	try {
-		// Проверяем наличие данных в кэше Redis
 		const cacheKey = `cache:${targetUrl}`;
 		const cachedData = await redisClient.get(cacheKey);
 
@@ -52,10 +47,8 @@ app.get('/proxy', async (req, res) => {
 			return res.json(JSON.parse(cachedData));
 		}
 
-		// Если данных нет в кэше, выполняем запрос
 		const response = await axios.get(targetUrl);
 
-		// Сохраняем данные в кэше на 1 час
 		await redisClient.set(cacheKey, JSON.stringify(response.data), {
 			EX: 3600, // Время жизни кэша в секундах
 		});
@@ -73,7 +66,6 @@ app.listen(PORT, () => {
 	console.log(`Сервер запущен на порту ${PORT}`);
 });
 
-// Сообщаем серверу LiveReload об изменениях
 liveReloadServer.server.once('connection', () => {
 	setTimeout(() => {
 		liveReloadServer.refresh('/');
