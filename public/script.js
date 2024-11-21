@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const fetchStats = () => {
 		var username = document.getElementById('username').value;
 		if (!username) {
-			alert('Пожалуйста, введите никнейм пользователя или ссылку.');
+			alert('Please, enter username or link.');
 			return;
 		}
 		const baseURL = 'https://www.faceit.com/ru/players/';
@@ -51,6 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (payload.cover_image_url) {
 					const userBackElement = document.getElementById('user-back');
 					userBackElement.style.backgroundImage = `url('${payload.cover_image_url}')`;
+					userBackElement.style.backgroundRepeat = 'no-repeat';
+					userBackElement.style.backgroundSize = 'cover'; // или 'contain'
+					userBackElement.style.backgroundPosition = 'center';
 				}
 				const country = document.getElementById('country');
 				const icon = document.getElementById('country-icon');
@@ -128,6 +131,30 @@ document.addEventListener('DOMContentLoaded', () => {
 					let totalGame = [];
 					let mc = 1;
 
+					const qualityMap = {
+						de_mirage: 0,
+						de_ancient: 0,
+						de_anubis: 0,
+						de_dust2: 0,
+						de_inferno: 0,
+						de_nuke: 0,
+						de_train: 0,
+						de_vertigo: 0,
+					};
+
+					const winrate = {
+						de_mirage: 0,
+						de_ancient: 0,
+						de_anubis: 0,
+						de_dust2: 0,
+						de_inferno: 0,
+						de_nuke: 0,
+						de_train: 0,
+						de_vertigo: 0,
+					};
+
+					let maxElo = 0;
+
 					const matchesDiv = document.getElementById('matches');
 					matchesDiv.innerHTML = `
 						<table>
@@ -142,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
 									<th>Deaths</th>
 									<th>K/D</th>
 									<th>K/R</th>
-									<th>ADR</th>
+									<th>HS %</th>
 									<th>ELO</th>
 								</tr>
 							</thead>
@@ -157,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					let wins = 0;
 					let totalMatchesToday = 0;
 
-					function getIconMap(map) {
+					function getIconMap(map, type) {
 						const maps = {
 							de_mirage:
 								'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7fb7d725-e44d-4e3c-b557-e1d19b260ab8_1695819144685.jpeg',
@@ -173,8 +200,36 @@ document.addEventListener('DOMContentLoaded', () => {
 								'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/7197a969-81e4-4fef-8764-55f46c7cec6e_1695819158849.jpeg',
 							de_inferno:
 								'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/993380de-bb5b-4aa1-ada9-a0c1741dc475_1695819220797.jpeg',
+							de_train:
+								'https://assets.faceit-cdn.net/third_party/games/ce652bd4-0abb-4c90-9936-1133965ca38b/assets/votables/225a54ad-c66d-46ee-8ae1-2e4159691ee9_1731582334484.png',
 						};
-						return `<img src="${maps[map] || ''}" />`;
+						if (type == 1) {
+							return `<img src="${maps[map] || ''}" />`;
+						} else {
+							return maps[map] || '';
+						}
+					}
+
+					function getLogoMap(map) {
+						const maps = {
+							de_mirage:
+								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-d16a1e0029.png',
+							de_vertigo:
+								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-60355f0c79.png',
+							de_ancient:
+								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-2dd5e0fa43.png',
+							de_dust2:
+								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-e3a439ea61.png',
+							de_anubis:
+								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-5287fdc954.png',
+							de_nuke:
+								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-60bb2b8bb4.png',
+							de_inferno:
+								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-4505fb0e5f.png',
+							de_train:
+								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-ef700a97ce.png',
+						};
+						return `<img class="logo-map" src="${maps[map] || ''}" />`;
 					}
 
 					// Функция для вычисления изменений Elo
@@ -182,7 +237,10 @@ document.addEventListener('DOMContentLoaded', () => {
 						if (previousElo === null) return currentElo;
 
 						const eloChange = currentElo - previousElo;
-						const changeText = eloChange > 0 ? `(+${eloChange})` : `(${eloChange})`;
+						const changeText =
+							eloChange > 0
+								? `(+${eloChange}) <div style="background-color: green" class="result-indicator">W</div>`
+								: `(${eloChange}) <div style="background-color: red" class="result-indicator">L</div>`;
 						const changeClass = eloChange > 0 ? 'elo-positive' : 'elo-negative';
 
 						if (!(matchDate instanceof Date)) {
@@ -224,6 +282,12 @@ document.addEventListener('DOMContentLoaded', () => {
 						const matchRow = document.createElement('tr');
 						let img = match.i1;
 
+						qualityMap[match.i1] += 1;
+
+						if (match.elo - previousElo > 0) {
+							winrate[match.i1] += 1;
+						}
+
 						const eloDisplay =
 							match.elo !== undefined
 								? getEloChange(match.elo, previousElo, match.date)
@@ -233,14 +297,18 @@ document.addEventListener('DOMContentLoaded', () => {
 						matchRow.innerHTML = `
 							<td><a href="https://www.faceit.com/ru/cs2/room/${
 								match.matchId
-							}/scoreboard" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-up-right-from-square"></i></a> ${mc}</td>
+							}/scoreboard" target="_blank" rel="noopener noreferrer">${mc}<i style="padding-left: 5px" class="fa-solid fa-up-right-from-square"></i></a></td>
 							<td class='date'>${new Date(match.date).toLocaleDateString()}<p>(${new Date(
 							match.date,
 						).toLocaleTimeString([], {
 							hour: '2-digit',
 							minute: '2-digit',
 						})})</p></td>
-							<td>${match.i1 !== undefined ? getIconMap(img) : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+							<td>${
+								match.i1 !== undefined
+									? getIconMap(img, 1)
+									: '<i class="fa-solid fa-rectangle-xmark"></i>'
+							}</td>
 							<td>${match.i18 !== undefined ? match.i18 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 							<td>${match.i6 !== undefined ? match.i6 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 							<td>${match.i7 !== undefined ? match.i7 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
@@ -266,15 +334,15 @@ document.addEventListener('DOMContentLoaded', () => {
 							}'>
 							${match.c3 !== undefined ? match.c3 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 							<td class='${
-								match.c10 >= 80
-									? match.c10 >= 100
+								match.c4 >= 62
+									? match.c4 >= 72
 										? 'td-solid-green'
 										: 'td-green'
-									: match.c10 <= 60
+									: match.c4 <= 40
 									? 'td-solid-red'
 									: 'td-red'
 							}'>
-							${match.c10 !== undefined ? match.c10 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
+							${match.c4 !== undefined ? match.c4 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 							<td>${eloDisplay}</td>
 							`;
 
@@ -291,6 +359,12 @@ document.addEventListener('DOMContentLoaded', () => {
 							}
 						}
 
+						// Max Elo
+						if (maxElo < match.elo) {
+							maxElo = match.elo;
+						}
+						// ---
+
 						if (match.elo != null && match.elo !== '') {
 							totalGame.push(match.elo);
 						}
@@ -305,6 +379,165 @@ document.addEventListener('DOMContentLoaded', () => {
 						}
 						return matchRow;
 					});
+
+					const mapWin = document.getElementById('maps-winnings');
+					mapWin.innerHTML = `
+						<div>
+							<h2>Mirage</h2>
+							<div class="icon-map" style="background-image: url('${getIconMap('de_mirage')}')">
+								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
+									(winrate['de_mirage'] / qualityMap['de_mirage']).toFixed(3) * 100 > 50
+										? 'rgb(56, 199, 89)'
+										: (winrate['de_mirage'] / qualityMap['de_mirage']).toFixed(3) * 100 > 35
+										? 'rgb(255, 207, 123)'
+										: 'red'
+								}">${
+						winrate['de_mirage'] || qualityMap['de_mirage']
+							? parseFloat(
+									((winrate['de_mirage'] / qualityMap['de_mirage']).toFixed(3) * 100).toFixed(1),
+							  )
+							: 0
+					}</span> %</div>
+								${getLogoMap('de_mirage')}
+							</div>
+						</div>
+						<div>
+							<h2>Vertigo</h2>
+							<div class="icon-map" style="background-image: url('${getIconMap('de_vertigo')}')">
+								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
+									(winrate['de_vertigo'] / qualityMap['de_vertigo']).toFixed(3) * 100 > 50
+										? 'rgb(56, 199, 89)'
+										: (winrate['de_vertigo'] / qualityMap['de_vertigo']).toFixed(3) * 100 > 35
+										? 'rgb(255, 207, 123)'
+										: 'red'
+								}">${
+						winrate['de_vertigo'] || qualityMap['de_vertigo']
+							? parseFloat(
+									((winrate['de_vertigo'] / qualityMap['de_vertigo']).toFixed(3) * 100).toFixed(1),
+							  )
+							: 0
+					}</span> %</div>
+								${getLogoMap('de_vertigo')}
+							</div>
+						</div>
+						<div>
+							<h2>Ancient</h2>
+							<div class="icon-map" style="background-image: url('${getIconMap('de_ancient')}')">
+								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
+									(winrate['de_ancient'] / qualityMap['de_ancient']).toFixed(3) * 100 > 50
+										? 'rgb(56, 199, 89)'
+										: (winrate['de_ancient'] / qualityMap['de_ancient']).toFixed(3) * 100 > 35
+										? 'rgb(255, 207, 123)'
+										: 'red'
+								}">${
+						winrate['de_ancient'] || qualityMap['de_ancient']
+							? parseFloat(
+									((winrate['de_ancient'] / qualityMap['de_ancient']).toFixed(3) * 100).toFixed(1),
+							  )
+							: 0
+					}</span> %</div>
+								${getLogoMap('de_ancient')}
+							</div>
+						</div>
+						<div>
+							<h2>Dust 2</h2>
+							<div class="icon-map" style="background-image: url('${getIconMap('de_dust2')}')">
+								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
+									(winrate['de_dust2'] / qualityMap['de_dust2']).toFixed(3) * 100 > 50
+										? 'rgb(56, 199, 89)'
+										: (winrate['de_dust2'] / qualityMap['de_dust2']).toFixed(3) * 100 > 35
+										? 'rgb(255, 207, 123)'
+										: 'red'
+								}">${
+						winrate['de_dust2'] || qualityMap['de_dust2']
+							? parseFloat(
+									((winrate['de_dust2'] / qualityMap['de_dust2']).toFixed(3) * 100).toFixed(1),
+							  )
+							: 0
+					}</span> %</div>
+								${getLogoMap('de_dust2')}
+							</div>
+						</div>
+						<div>
+							<h2>Anubis</h2>
+							<div class="icon-map" style="background-image: url('${getIconMap('de_anubis')}')">
+								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
+									(winrate['de_anubis'] / qualityMap['de_anubis']).toFixed(3) * 100 > 50
+										? 'rgb(56, 199, 89)'
+										: (winrate['de_anubis'] / qualityMap['de_anubis']).toFixed(3) * 100 > 35
+										? 'rgb(255, 207, 123)'
+										: 'red'
+								}">${
+						winrate['de_anubis'] || qualityMap['de_anubis']
+							? parseFloat(
+									((winrate['de_anubis'] / qualityMap['de_anubis']).toFixed(3) * 100).toFixed(1),
+							  )
+							: 0
+					}</span> %</div>
+								${getLogoMap('de_anubis')}
+							</div>
+						</div>
+						<div>
+							<h2>Nuke</h2>
+							<div class="icon-map" style="background-image: url('${getIconMap('de_nuke')}')">
+								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
+									(winrate['de_nuke'] / qualityMap['de_nuke']).toFixed(3) * 100 > 50
+										? 'rgb(56, 199, 89)'
+										: (winrate['de_nuke'] / qualityMap['de_nuke']).toFixed(3) * 100 > 35
+										? 'rgb(255, 207, 123)'
+										: 'red'
+								}">${
+						winrate['de_nuke'] || qualityMap['de_nuke']
+							? parseFloat(
+									((winrate['de_nuke'] / qualityMap['de_nuke']).toFixed(3) * 100).toFixed(1),
+							  )
+							: 0
+					}</span> %</div>
+								${getLogoMap('de_nuke')}
+							</div>
+						</div>
+						<div>
+							<h2>Inferno</h2>
+							<div class="icon-map" style="background-image: url('${getIconMap('de_inferno')}')">
+								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
+									(winrate['de_inferno'] / qualityMap['de_inferno']).toFixed(3) * 100 > 50
+										? 'rgb(56, 199, 89)'
+										: (winrate['de_inferno'] / qualityMap['de_inferno']).toFixed(3) * 100 > 35
+										? 'rgb(255, 207, 123)'
+										: 'red'
+								}">${
+						winrate['de_inferno'] || qualityMap['de_inferno']
+							? parseFloat(
+									((winrate['de_inferno'] / qualityMap['de_inferno']).toFixed(3) * 100).toFixed(1),
+							  )
+							: 0
+					}</span> %</div>
+								${getLogoMap('de_inferno')}
+							</div>
+						</div>
+						<div>
+							<h2>Train</h2>
+							<div class="icon-map" style="background-image: url('${getIconMap('de_train')}')">
+								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
+									(winrate['de_train'] / qualityMap['de_train']).toFixed(3) * 100 > 50
+										? 'rgb(56, 199, 89)'
+										: (winrate['de_train'] / qualityMap['de_train']).toFixed(3) * 100 > 35
+										? 'rgb(255, 207, 123)'
+										: 'red'
+								}">${
+						winrate['de_train'] || qualityMap['de_train']
+							? parseFloat(
+									((winrate['de_train'] / qualityMap['de_train']).toFixed(3) * 100).toFixed(1),
+							  )
+							: 0
+					}</span> %</div>
+								${getLogoMap('de_train')}
+							</div>
+						</div>
+					`;
+
+					console.log(winrate);
+					console.log(qualityMap);
 
 					// Отображение статистики последней игровой сессии
 					const statsDiv = document.getElementById('won-matches');
@@ -324,7 +557,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						eloGains > 0
 							? `<p style="padding-left: 10px" class="elo-positive">+${eloGains}</p>`
 							: `<p style="padding-left: 10px" class="elo-negative">${eloGains}</p>`;
-					statsDiv.innerHTML = `<p>Won matches in the last session: ${sessionStats.wins}/${sessionStats.totalMatches}</p><div style="display: flex">ELO gained in the last session: ${eloGainsText}</div>`;
+					statsDiv.innerHTML = `<p style="font-size: 1.4rem; padding-bottom: 10px; color: #e65b24" >Max Elo: ${maxElo}</p><p>Won matches in the last session: ${sessionStats.wins}/${sessionStats.totalMatches}</p><div style="display: flex">ELO gained in the last session: ${eloGainsText}</div>`;
 
 					rows.reverse().forEach((row) => {
 						matchesTableBody.appendChild(row);
@@ -411,7 +644,7 @@ document.addEventListener('DOMContentLoaded', () => {
 							<p>Real KD: ${realKD.toFixed(2)}</p>
 							<p>KPR: ${kpr.toFixed(2)}</p>
 							<p>HeadShots: ${hs.toFixed(0)}%</p>
-							${adr !== 'missing' ? `<p>ADR per ${rW} matches: ${adr.toFixed(1)}</p>` : ''}
+							${adr !== 'missing' ? `<p>HS% per ${rW} matches: ${adr.toFixed(1)}</p>` : ''}
 					</div>
 			`;
 		avgKillsDiv.style.display = 'block';
@@ -500,6 +733,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			document.getElementById('title-All-games').style.display = 'block';
 			document.getElementById('title-All-matches').style.display = 'block';
 			document.getElementById('title-list-games').style.display = 'block';
+			document.getElementById('title-maps-winning').style.display = 'block';
 		}
 	});
 
@@ -516,7 +750,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.getElementById('games').innerHTML = '';
 		document.getElementById('average-kills').style.display = 'none';
 		document.getElementById('title-All-games').style.display = 'none';
+		document.getElementById('title-maps-winning').style.display = 'none';
 		document.getElementById('title-list-games').style.display = 'none';
+		document.getElementById('maps-winnings').innerHTML = '';
 		if (eloChart) {
 			eloChart.destroy();
 		}

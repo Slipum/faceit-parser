@@ -16,8 +16,13 @@
 	<body>
 		<header class="header-container">
 			<div class="h-logo">
-				<a href="/">
+				<a href="/" style="display: flex">
 					<h1><i class="fa-solid fa-chart-simple"></i> Faceit-Parser</h1>
+					<p style="font-size: 24px; padding: 10px 20px; font-weight: 700">for</p>
+					<img
+						style="width: 50px; height: auto"
+						src="https://distribution.faceit-cdn.net/images/37c4c8fa-31a2-4a81-8654-cf133ec29856.svg"
+						alt="CS2" />
 				</a>
 			</div>
 			<div class="search-wrapper">
@@ -25,7 +30,7 @@
 					<div class="find-container">
 						<i class="fa-solid fa-magnifying-glass"></i>
 					</div>
-					<input type="text" id="username" placeholder="Enter faceit username" />
+					<input type="text" id="username" placeholder="Enter faceit username" autocomplete="off" />
 					<button id="fetchStats"></button>
 					<button id="clearStats"><i class="fa-regular fa-circle-xmark"></i></button>
 				</div>
@@ -69,6 +74,12 @@
 		<div class="games-container">
 			<div id="games"></div>
 		</div>
+
+		<h3 id="title-maps-winning" class="title-all">Map Wins</h3>
+		<div class="maps-winning-container">
+			<div id="maps-winnings"></div>
+		</div>
+
 		<div class="title-matches-container">
 			<h3 id="title-All-matches" class="title-all">Last matches</h3>
 			<div id="won-matches"></div>

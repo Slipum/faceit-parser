@@ -7,7 +7,9 @@
 }
 
 html {
-	background-color: #2c2727;
+	/* background-color: #2c2727; */
+	background-color: #101010;
+	color: #c6c7c4;
 }
 
 a {
@@ -17,7 +19,7 @@ a {
 
 hr {
 	margin: 3px 0;
-	border: 5px solid #2c2727;
+	border: 5px solid #101010;
 }
 
 tbody tr td {
@@ -26,7 +28,7 @@ tbody tr td {
 
 /* Заголовок */
 .header-container {
-	background-color: #f4f4f4;
+	background-color: #f6f4f4;
 	font-size: 16px;
 	line-height: 1.6;
 	margin: 0;
@@ -34,7 +36,7 @@ tbody tr td {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	background-color: #cf6116;
+	background-color: #b64900;
 	color: #f6f4f4;
 	width: 100%;
 	position: relative;
@@ -69,19 +71,21 @@ tbody tr td {
 	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
+	border-radius: 10px;
+	overflow: hidden;
 }
 
 .find-container {
 	position: absolute;
 	left: 14px;
-	color: black;
-	opacity: 0.6;
+	color: rgba(255, 255, 255, 0.87);
 	font-size: 1.2rem;
 }
 
 .search-container {
 	display: flex;
 	align-items: center;
+	border-radius: 10px;
 }
 
 .search-container button {
@@ -91,8 +95,7 @@ tbody tr td {
 	border: none;
 	padding: 0;
 	cursor: pointer;
-	color: black;
-	opacity: 0.6;
+	color: rgba(255, 255, 255, 0.87);
 	left: 93%;
 	width: auto;
 }
@@ -103,9 +106,16 @@ tbody tr td {
 	font-size: 16px;
 	width: 500px;
 	transition: 0.5s;
-	border-radius: 3px;
-	border: 2px solid #f6f4f4;
+	border-radius: 10px;
+	border: 2px solid rgb(48, 48, 48);
 	outline: none;
+	background-color: rgb(48, 48, 48);
+	color: rgba(255, 255, 255, 0.87);
+}
+
+.search-container input:focus {
+	background-color: black;
+	color: white;
 }
 
 .github {
@@ -131,7 +141,7 @@ tbody tr td {
 
 .main-info .country-info,
 .main-info hr {
-	background-color: #3e3939;
+	background-color: #161616;
 }
 
 .main-info img {
@@ -142,6 +152,7 @@ tbody tr td {
 	justify-content: center;
 	display: flex;
 	align-items: center;
+	border-radius: 0.8rem;
 }
 
 .country-info i {
@@ -155,8 +166,9 @@ tbody tr td {
 	justify-content: center;
 	align-items: center;
 	padding: 20px 0 10px 0;
-	background-color: #3e3939;
+	background-color: #161616;
 	width: 100%;
+	border-radius: 1rem;
 }
 
 .overlay {
@@ -167,6 +179,7 @@ tbody tr td {
 	bottom: 0;
 	background-color: rgba(0, 0, 0, 0.6);
 	pointer-events: none;
+	border-radius: 1rem;
 }
 
 .user-info {
@@ -191,7 +204,7 @@ tbody tr td {
 
 .user-info .avg-container {
 	text-align: left;
-	color: #fff;
+	color: #f6f4f4;
 	padding-left: 15px;
 }
 
@@ -214,7 +227,7 @@ tbody tr td {
 #games div {
 	margin: 0 20px;
 	font-size: 2rem;
-	background-color: #3e3939;
+	background-color: #161616;
 	width: 400px;
 	padding: 10px;
 	border-radius: 0.5rem;
@@ -275,7 +288,7 @@ tbody tr td {
 
 .username {
 	font-size: 3rem;
-	color: #823a0a;
+	color: #ffb07c;
 	padding-bottom: 20px;
 }
 /* ------ */
@@ -323,8 +336,8 @@ tbody tr td {
 #matches table {
 	width: 100%;
 	border-collapse: collapse;
-	background-color: #3e3939;
-	color: #fff;
+	background-color: #161616;
+	color: #f6f4f4;
 	margin-bottom: 50px;
 	border-radius: 10px;
 	overflow: hidden;
@@ -337,9 +350,37 @@ tbody tr td {
 }
 
 #matches thead {
-	background-color: #cf6116;
+	background-color: #101010;
 	box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
 }
+
+/* ---Table--- */
+
+#matches thead {
+	position: relative;
+	z-index: 1;
+}
+
+#matches thead::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 0;
+	border: 2px solid #ac5049;
+	border-radius: 10px 10px 0 0;
+	background-color: #101010;
+}
+
+#matches thead tr,
+#matches thead th {
+	position: relative;
+	background-color: transparent;
+}
+
+/* ----------- */
 
 #matches thead th {
 	font-weight: 700;
@@ -347,12 +388,7 @@ tbody tr td {
 }
 
 #matches tbody tr:nth-child(even) {
-	background-color: #454040;
-}
-
-#matches tbody tr:hover {
-	background-color: rgba(173, 83, 23, 0.24);
-	color: #f6f4f4;
+	background-color: #1d1d1d;
 }
 
 #matches tbody td {
@@ -371,15 +407,17 @@ tbody tr td {
 #won-matches {
 	font-size: 1.17rem;
 	font-weight: 600;
-	color: white;
+	color: #f6f4f4;
 }
 
 .td-red {
-	color: rgba(255, 0, 0, 0.5);
+	color: rgb(255, 207, 123);
+	font-weight: 700;
 }
 
 .td-green {
-	color: rgba(0, 255, 0, 0.5);
+	color: rgb(255, 207, 123);
+	font-weight: 700;
 }
 
 .elo-negative {
@@ -387,7 +425,7 @@ tbody tr td {
 }
 
 .elo-positive {
-	color: rgb(0, 255, 0);
+	color: rgb(56, 199, 89);
 }
 
 #matches tbody .td-solid-red {
@@ -396,7 +434,7 @@ tbody tr td {
 }
 
 #matches tbody .td-solid-green {
-	color: rgb(0, 255, 0);
+	color: rgb(56, 199, 89);
 	font-weight: 700;
 }
 
@@ -418,4 +456,78 @@ tbody tr td {
 	margin-left: auto;
 	margin-right: 10%;
 	opacity: 0.6;
+}
+
+.result-indicator {
+	color: #f6f4f4;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	width: 20px;
+	height: 20px;
+	font-size: 12px;
+	line-height: 1;
+	padding: 0;
+	border-radius: 4px;
+	text-align: center;
+	font-weight: 800;
+}
+
+.icon-map {
+	height: 250px;
+	width: 10rem;
+	background-repeat: no-repeat; /* Отключает повторение картинки */
+	background-size: cover; /* Растягивает картинку, сохраняя пропорции */
+	background-position: center; /* Центрирует картинку */
+	align-items: center;
+}
+
+.icon-map img {
+	padding: 7vh 0;
+}
+
+.logo-map {
+	width: 70px;
+}
+
+#maps-winnings {
+	width: auto;
+	display: flex;
+	gap: 1rem;
+}
+
+#maps-winnings div {
+	text-align: center;
+	border-radius: 10px 10px 0 0;
+	z-index: 999;
+}
+
+#maps-winnings div div {
+	border-radius: 0;
+	border: 0;
+}
+
+#maps-winnings div h2 {
+	background-color: #161616;
+	border-radius: 10px 10px 0 0;
+	padding-bottom: 3px;
+}
+
+.maps-winning-container {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 20px;
+}
+
+.winrate-title {
+	color: #f6f4f4;
+	font-size: 16px;
+	font-weight: 1000;
+	background: rgb(0, 0, 0);
+	background: linear-gradient(
+		180deg,
+		rgba(0, 0, 0, 1) 0%,
+		rgba(0, 0, 0, 0.5172269591430323) 67%,
+		rgba(255, 255, 255, 0) 100%
+	);
 }
