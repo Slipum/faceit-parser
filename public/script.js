@@ -384,7 +384,9 @@ document.addEventListener('DOMContentLoaded', () => {
 					mapWin.innerHTML = `
 						<div>
 							<h2>Mirage</h2>
-							<div class="icon-map" style="background-image: url('${getIconMap('de_mirage')}')">
+							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
+								'de_mirage',
+							)}')">
 								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
 									(winrate['de_mirage'] / qualityMap['de_mirage']).toFixed(3) * 100 > 50
 										? 'rgb(56, 199, 89)'
@@ -403,7 +405,9 @@ document.addEventListener('DOMContentLoaded', () => {
 						</div>
 						<div>
 							<h2>Vertigo</h2>
-							<div class="icon-map" style="background-image: url('${getIconMap('de_vertigo')}')">
+							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
+								'de_vertigo',
+							)}')">
 								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
 									(winrate['de_vertigo'] / qualityMap['de_vertigo']).toFixed(3) * 100 > 50
 										? 'rgb(56, 199, 89)'
@@ -422,7 +426,9 @@ document.addEventListener('DOMContentLoaded', () => {
 						</div>
 						<div>
 							<h2>Ancient</h2>
-							<div class="icon-map" style="background-image: url('${getIconMap('de_ancient')}')">
+							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
+								'de_ancient',
+							)}')">
 								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
 									(winrate['de_ancient'] / qualityMap['de_ancient']).toFixed(3) * 100 > 50
 										? 'rgb(56, 199, 89)'
@@ -441,7 +447,9 @@ document.addEventListener('DOMContentLoaded', () => {
 						</div>
 						<div>
 							<h2>Dust 2</h2>
-							<div class="icon-map" style="background-image: url('${getIconMap('de_dust2')}')">
+							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
+								'de_dust2',
+							)}')">
 								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
 									(winrate['de_dust2'] / qualityMap['de_dust2']).toFixed(3) * 100 > 50
 										? 'rgb(56, 199, 89)'
@@ -460,7 +468,9 @@ document.addEventListener('DOMContentLoaded', () => {
 						</div>
 						<div>
 							<h2>Anubis</h2>
-							<div class="icon-map" style="background-image: url('${getIconMap('de_anubis')}')">
+							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
+								'de_anubis',
+							)}')">
 								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
 									(winrate['de_anubis'] / qualityMap['de_anubis']).toFixed(3) * 100 > 50
 										? 'rgb(56, 199, 89)'
@@ -479,7 +489,9 @@ document.addEventListener('DOMContentLoaded', () => {
 						</div>
 						<div>
 							<h2>Nuke</h2>
-							<div class="icon-map" style="background-image: url('${getIconMap('de_nuke')}')">
+							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
+								'de_nuke',
+							)}')">
 								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
 									(winrate['de_nuke'] / qualityMap['de_nuke']).toFixed(3) * 100 > 50
 										? 'rgb(56, 199, 89)'
@@ -498,7 +510,9 @@ document.addEventListener('DOMContentLoaded', () => {
 						</div>
 						<div>
 							<h2>Inferno</h2>
-							<div class="icon-map" style="background-image: url('${getIconMap('de_inferno')}')">
+							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
+								'de_inferno',
+							)}')">
 								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
 									(winrate['de_inferno'] / qualityMap['de_inferno']).toFixed(3) * 100 > 50
 										? 'rgb(56, 199, 89)'
@@ -517,7 +531,9 @@ document.addEventListener('DOMContentLoaded', () => {
 						</div>
 						<div>
 							<h2>Train</h2>
-							<div class="icon-map" style="background-image: url('${getIconMap('de_train')}')">
+							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
+								'de_train',
+							)}')">
 								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
 									(winrate['de_train'] / qualityMap['de_train']).toFixed(3) * 100 > 50
 										? 'rgb(56, 199, 89)'

@@ -476,9 +476,9 @@ tbody tr td {
 .icon-map {
 	height: 250px;
 	width: 10rem;
-	background-repeat: no-repeat; /* Отключает повторение картинки */
-	background-size: cover; /* Растягивает картинку, сохраняя пропорции */
-	background-position: center; /* Центрирует картинку */
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
 	align-items: center;
 }
 
@@ -499,7 +499,6 @@ tbody tr td {
 #maps-winnings div {
 	text-align: center;
 	border-radius: 10px 10px 0 0;
-	z-index: 999;
 }
 
 #maps-winnings div div {
@@ -523,11 +522,4 @@ tbody tr td {
 	color: #f6f4f4;
 	font-size: 16px;
 	font-weight: 1000;
-	background: rgb(0, 0, 0);
-	background: linear-gradient(
-		180deg,
-		rgba(0, 0, 0, 1) 0%,
-		rgba(0, 0, 0, 0.5172269591430323) 67%,
-		rgba(255, 255, 255, 0) 100%
-	);
 }
