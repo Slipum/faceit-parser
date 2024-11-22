@@ -474,20 +474,13 @@ tbody tr td {
 }
 
 .icon-map {
-	height: 250px;
+	height: 18.7rem;
 	width: 10rem;
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: center;
 	align-items: center;
-}
-
-.icon-map img {
-	padding: 7vh 0;
-}
-
-.logo-map {
-	width: 70px;
+	color: #dedcdc;
 }
 
 #maps-winnings {
@@ -498,17 +491,15 @@ tbody tr td {
 
 #maps-winnings div {
 	text-align: center;
-	border-radius: 10px 10px 0 0;
 }
 
-#maps-winnings div div {
-	border-radius: 0;
+.icon-map {
 	border: 0;
+	border-radius: 10px;
 }
 
 #maps-winnings div h2 {
 	background-color: #161616;
-	border-radius: 10px 10px 0 0;
 	padding-bottom: 3px;
 }
 
@@ -519,7 +510,23 @@ tbody tr td {
 }
 
 .winrate-title {
-	color: #f6f4f4;
-	font-size: 16px;
-	font-weight: 1000;
+	font-size: 20px;
+	line-height: 1.15;
+	font-weight: 800;
+	padding-top: 3px;
+}
+
+.logo-map {
+	width: 70px;
+	padding-top: 7vh;
+}
+
+.logo-map-container span {
+	padding-bottom: 7vh;
+	width: 100px;
+	display: inline-block;
+}
+
+.logo-map-container {
+	height: 200px;
 }

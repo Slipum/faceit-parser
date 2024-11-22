@@ -131,6 +131,17 @@ document.addEventListener('DOMContentLoaded', () => {
 					let totalGame = [];
 					let mc = 1;
 
+					const recentResult = {
+						de_mirage: '',
+						de_ancient: '',
+						de_anubis: '',
+						de_dust2: '',
+						de_inferno: '',
+						de_nuke: '',
+						de_train: '',
+						de_vertigo: '',
+					};
+
 					const qualityMap = {
 						de_mirage: 0,
 						de_ancient: 0,
@@ -288,6 +299,12 @@ document.addEventListener('DOMContentLoaded', () => {
 							winrate[match.i1] += 1;
 						}
 
+						if (match.elo - previousElo > 0) {
+							recentResult[match.i1] += '1';
+						} else {
+							recentResult[match.i1] += '0';
+						}
+
 						const eloDisplay =
 							match.elo !== undefined
 								? getEloChange(match.elo, previousElo, match.date)
@@ -315,10 +332,10 @@ document.addEventListener('DOMContentLoaded', () => {
 							<td>${match.i8 !== undefined ? match.i8 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 							<td class='${
 								match.c2 >= 1
-									? match.c2 >= 1.3
+									? match.c2 >= 1.15
 										? 'td-solid-green'
 										: 'td-green'
-									: match.c2 <= 0.7
+									: match.c2 <= 0.8
 									? 'td-solid-red'
 									: 'td-red'
 							}'>
@@ -381,179 +398,62 @@ document.addEventListener('DOMContentLoaded', () => {
 					});
 
 					const mapWin = document.getElementById('maps-winnings');
-					mapWin.innerHTML = `
-						<div>
-							<h2>Mirage</h2>
-							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
-								'de_mirage',
-							)}')">
-								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
-									(winrate['de_mirage'] / qualityMap['de_mirage']).toFixed(3) * 100 > 50
-										? 'rgb(56, 199, 89)'
-										: (winrate['de_mirage'] / qualityMap['de_mirage']).toFixed(3) * 100 > 35
-										? 'rgb(255, 207, 123)'
-										: 'red'
-								}">${
-						winrate['de_mirage'] || qualityMap['de_mirage']
-							? parseFloat(
-									((winrate['de_mirage'] / qualityMap['de_mirage']).toFixed(3) * 100).toFixed(1),
-							  )
-							: 0
-					}</span> %</div>
-								${getLogoMap('de_mirage')}
-							</div>
-						</div>
-						<div>
-							<h2>Vertigo</h2>
-							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
-								'de_vertigo',
-							)}')">
-								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
-									(winrate['de_vertigo'] / qualityMap['de_vertigo']).toFixed(3) * 100 > 50
-										? 'rgb(56, 199, 89)'
-										: (winrate['de_vertigo'] / qualityMap['de_vertigo']).toFixed(3) * 100 > 35
-										? 'rgb(255, 207, 123)'
-										: 'red'
-								}">${
-						winrate['de_vertigo'] || qualityMap['de_vertigo']
-							? parseFloat(
-									((winrate['de_vertigo'] / qualityMap['de_vertigo']).toFixed(3) * 100).toFixed(1),
-							  )
-							: 0
-					}</span> %</div>
-								${getLogoMap('de_vertigo')}
-							</div>
-						</div>
-						<div>
-							<h2>Ancient</h2>
-							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
-								'de_ancient',
-							)}')">
-								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
-									(winrate['de_ancient'] / qualityMap['de_ancient']).toFixed(3) * 100 > 50
-										? 'rgb(56, 199, 89)'
-										: (winrate['de_ancient'] / qualityMap['de_ancient']).toFixed(3) * 100 > 35
-										? 'rgb(255, 207, 123)'
-										: 'red'
-								}">${
-						winrate['de_ancient'] || qualityMap['de_ancient']
-							? parseFloat(
-									((winrate['de_ancient'] / qualityMap['de_ancient']).toFixed(3) * 100).toFixed(1),
-							  )
-							: 0
-					}</span> %</div>
-								${getLogoMap('de_ancient')}
-							</div>
-						</div>
-						<div>
-							<h2>Dust 2</h2>
-							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
-								'de_dust2',
-							)}')">
-								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
-									(winrate['de_dust2'] / qualityMap['de_dust2']).toFixed(3) * 100 > 50
-										? 'rgb(56, 199, 89)'
-										: (winrate['de_dust2'] / qualityMap['de_dust2']).toFixed(3) * 100 > 35
-										? 'rgb(255, 207, 123)'
-										: 'red'
-								}">${
-						winrate['de_dust2'] || qualityMap['de_dust2']
-							? parseFloat(
-									((winrate['de_dust2'] / qualityMap['de_dust2']).toFixed(3) * 100).toFixed(1),
-							  )
-							: 0
-					}</span> %</div>
-								${getLogoMap('de_dust2')}
-							</div>
-						</div>
-						<div>
-							<h2>Anubis</h2>
-							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
-								'de_anubis',
-							)}')">
-								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
-									(winrate['de_anubis'] / qualityMap['de_anubis']).toFixed(3) * 100 > 50
-										? 'rgb(56, 199, 89)'
-										: (winrate['de_anubis'] / qualityMap['de_anubis']).toFixed(3) * 100 > 35
-										? 'rgb(255, 207, 123)'
-										: 'red'
-								}">${
-						winrate['de_anubis'] || qualityMap['de_anubis']
-							? parseFloat(
-									((winrate['de_anubis'] / qualityMap['de_anubis']).toFixed(3) * 100).toFixed(1),
-							  )
-							: 0
-					}</span> %</div>
-								${getLogoMap('de_anubis')}
-							</div>
-						</div>
-						<div>
-							<h2>Nuke</h2>
-							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
-								'de_nuke',
-							)}')">
-								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
-									(winrate['de_nuke'] / qualityMap['de_nuke']).toFixed(3) * 100 > 50
-										? 'rgb(56, 199, 89)'
-										: (winrate['de_nuke'] / qualityMap['de_nuke']).toFixed(3) * 100 > 35
-										? 'rgb(255, 207, 123)'
-										: 'red'
-								}">${
-						winrate['de_nuke'] || qualityMap['de_nuke']
-							? parseFloat(
-									((winrate['de_nuke'] / qualityMap['de_nuke']).toFixed(3) * 100).toFixed(1),
-							  )
-							: 0
-					}</span> %</div>
-								${getLogoMap('de_nuke')}
-							</div>
-						</div>
-						<div>
-							<h2>Inferno</h2>
-							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
-								'de_inferno',
-							)}')">
-								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
-									(winrate['de_inferno'] / qualityMap['de_inferno']).toFixed(3) * 100 > 50
-										? 'rgb(56, 199, 89)'
-										: (winrate['de_inferno'] / qualityMap['de_inferno']).toFixed(3) * 100 > 35
-										? 'rgb(255, 207, 123)'
-										: 'red'
-								}">${
-						winrate['de_inferno'] || qualityMap['de_inferno']
-							? parseFloat(
-									((winrate['de_inferno'] / qualityMap['de_inferno']).toFixed(3) * 100).toFixed(1),
-							  )
-							: 0
-					}</span> %</div>
-								${getLogoMap('de_inferno')}
-							</div>
-						</div>
-						<div>
-							<h2>Train</h2>
-							<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('${getIconMap(
-								'de_train',
-							)}')">
-								<div class="winrate-title" style="width: 100%">Win rate <span style="; color: ${
-									(winrate['de_train'] / qualityMap['de_train']).toFixed(3) * 100 > 50
-										? 'rgb(56, 199, 89)'
-										: (winrate['de_train'] / qualityMap['de_train']).toFixed(3) * 100 > 35
-										? 'rgb(255, 207, 123)'
-										: 'red'
-								}">${
-						winrate['de_train'] || qualityMap['de_train']
-							? parseFloat(
-									((winrate['de_train'] / qualityMap['de_train']).toFixed(3) * 100).toFixed(1),
-							  )
-							: 0
-					}</span> %</div>
-								${getLogoMap('de_train')}
-							</div>
-						</div>
-					`;
 
-					console.log(winrate);
-					console.log(qualityMap);
+					const maps = [
+						'de_mirage',
+						'de_vertigo',
+						'de_ancient',
+						'de_dust2',
+						'de_anubis',
+						'de_nuke',
+						'de_inferno',
+						'de_train',
+					];
+
+					const calculateWinRate = (map) => {
+						const rate = (winrate[map] / qualityMap[map] || 0).toFixed(3) * 100;
+						return {
+							value: parseFloat(rate.toFixed(1)),
+							color: rate > 50 ? 'rgb(56, 199, 89)' : rate > 35 ? 'rgb(255, 207, 123)' : 'red',
+						};
+					};
+
+					mapWin.innerHTML = maps
+						.map((mapKey) => {
+							const winRateData = calculateWinRate(mapKey);
+							let resM = recentResult[mapKey].slice(-3);
+							let arr = [...resM].reverse();
+							return `
+									<div>
+											<div class="icon-map" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('${getIconMap(
+												mapKey,
+											)}')">
+											<div class="winrate-title" style="width: 100%">
+											<span style="color: ${winRateData.color}">${winRateData.value}</span>
+											<span style="display: inline-block; width: 100%; font-weight: 500; font-size: 16px">Win rate %</span>
+							 				</div>
+											<div class="logo-map-container">
+												<p style="${mapKey == 'de_ancient' ? 'padding-bottom: 0.394rem' : ''}">${getLogoMap(mapKey)}</p>
+												<span>${mapKey.replace('de_', '').toUpperCase()}</span>
+											</div>
+											<div>
+											<span style="display: inline-block; width: 100%">Recent results</span>
+												${arr
+													.map((result) => {
+														let isWin = result === '1';
+														return `
+													<div style="background-color: ${isWin ? 'green' : 'red'}" class="result-indicator">
+														${isWin ? 'W' : 'L'}
+													</div>
+												`;
+													})
+													.join('')}
+											</div>
+										</div>
+									</div>
+								`;
+						})
+						.join('');
 
 					// Отображение статистики последней игровой сессии
 					const statsDiv = document.getElementById('won-matches');
