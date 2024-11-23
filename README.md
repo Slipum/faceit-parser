@@ -16,5 +16,5 @@ You can try the [link](https://faceit-parser.vercel.app/)
 
 > Preview
 
-<img src="./assets/image3.png" />
+<img src="./assets/image.png" />
 <img src="./assets/image4.png" />
