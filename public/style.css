@@ -191,6 +191,7 @@ tbody tr td {
 
 .user-info img {
 	justify-content: center;
+	border-radius: 1rem;
 }
 
 .user-info img,
@@ -529,4 +530,97 @@ tbody tr td {
 
 .logo-map-container {
 	height: 200px;
+}
+
+.container {
+	display: none;
+	max-width: 80%;
+	margin: 20px auto;
+	padding: 20px;
+	background: #1e1e1e;
+	border-radius: 1rem;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	position: relative; /* Для позиционирования значка (i) */
+}
+
+.title {
+	font-size: 24px;
+	font-weight: bold;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 20px;
+}
+
+.stat-card {
+	background: #2c2c2c;
+	padding: 15px;
+	border-radius: 8px;
+	text-align: center;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card .stat-title {
+	font-weight: 600;
+	font-size: 14px;
+	color: #b8b7b7;
+}
+
+.stat-card .stat-value {
+	font-size: 28px;
+	font-weight: bold;
+	margin: 10px 0;
+	color: #f6f4f4;
+}
+
+.stat-card .stat-change {
+	font-size: 14px;
+	font-weight: 601;
+	color: #4caf50;
+}
+
+.stat-card .stat-change.negative {
+	color: #f44336;
+}
+
+.stat-card .stat-change.netral {
+	color: rgb(255, 207, 123);
+}
+
+.info-icon {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	background: #444;
+	color: #fff;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.info-icon:hover + .tooltip {
+	display: block;
+}
+
+.tooltip {
+	display: none;
+	position: absolute;
+	top: 40px;
+	right: 10px;
+	background: #333;
+	color: #fff;
+	padding: 8px;
+	border-radius: 4px;
+	font-size: 12px;
+	max-width: 200px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }

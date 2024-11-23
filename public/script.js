@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					const userBackElement = document.getElementById('user-back');
 					userBackElement.style.backgroundImage = `url('${payload.cover_image_url}')`;
 					userBackElement.style.backgroundRepeat = 'no-repeat';
-					userBackElement.style.backgroundSize = 'cover'; // или 'contain'
+					userBackElement.style.backgroundSize = 'cover';
 					userBackElement.style.backgroundPosition = 'center';
 				}
 				const country = document.getElementById('country');
@@ -101,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	const fetchMatchStats = (userId, currentElo) => {
 		const params = new URLSearchParams({
-			page: '0',
 			game_mode: '5v5',
 		});
 
@@ -164,7 +163,27 @@ document.addEventListener('DOMContentLoaded', () => {
 						de_vertigo: 0,
 					};
 
+					const stats = [
+						{ title: 'Win rate %', value: 0, change: 0 },
+						{ title: 'AVG kills', value: 0, change: 0 },
+						{ title: 'K/D', value: 0, change: 0 },
+						{ title: 'K/R', value: 0, change: 0 },
+						{ title: 'Headshot %', value: 0, change: 0 },
+					];
+
+					const statsSET = [
+						{ title: 'Win rate %', value: 0 },
+						{ title: 'AVG kills', value: 0 },
+						{ title: 'K/D', value: 0 },
+						{ title: 'K/R', value: 0 },
+						{ title: 'Headshot %', value: 0 },
+					];
+
+					let recentResPerTen = '';
+
 					let maxElo = 0;
+
+					let counter = 0;
 
 					const matchesDiv = document.getElementById('matches');
 					matchesDiv.innerHTML = `
@@ -293,6 +312,17 @@ document.addEventListener('DOMContentLoaded', () => {
 						const matchRow = document.createElement('tr');
 						let img = match.i1;
 
+						counter += 1;
+
+						// Логика перфоманса
+						if (counter > 89 && counter <= 99) {
+							statsSET[1]['value'] += Number(match.i6); // AVG kills
+							statsSET[2]['value'] += Number(match.c2); // K/D
+							statsSET[3]['value'] += Number(match.c3); // K/R
+							statsSET[4]['value'] += Number(match.c4); // Headshots
+						}
+						// ------
+
 						qualityMap[match.i1] += 1;
 
 						if (match.elo - previousElo > 0) {
@@ -301,8 +331,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 						if (match.elo - previousElo > 0) {
 							recentResult[match.i1] += '1';
+							recentResPerTen += '1';
 						} else {
 							recentResult[match.i1] += '0';
+							recentResPerTen += '0';
 						}
 
 						const eloDisplay =
@@ -396,6 +428,31 @@ document.addEventListener('DOMContentLoaded', () => {
 						}
 						return matchRow;
 					});
+
+					let count = 0;
+					for (const char of recentResPerTen.slice(-10)) {
+						if (char === '1') {
+							count++;
+						}
+					}
+
+					let countPer10 = 0;
+					for (const char of recentResPerTen) {
+						if (char === '1') {
+							countPer10++;
+						}
+					}
+
+					// Логика перфоманса
+					stats[0]['value'] = count * 10; // Win rate
+					stats[1]['value'] = (statsSET[1]['value'] / 10).toFixed(1); // AVG Kills
+					stats[2]['value'] = (statsSET[2]['value'] / 10).toFixed(2); // K/D
+					stats[3]['value'] = (statsSET[3]['value'] / 10).toFixed(2); // K/R
+					stats[4]['value'] = (statsSET[4]['value'] / 10).toFixed(1); // Headshots
+
+					// --- Change ---
+					stats[0]['change'] = stats[0]['value'] - countPer10; // Win rate
+					// ------
 
 					const mapWin = document.getElementById('maps-winnings');
 
@@ -498,6 +555,34 @@ document.addEventListener('DOMContentLoaded', () => {
 						name,
 						currentElo,
 					);
+
+					stats[1]['change'] = (stats[1]['value'] - avgKills.toFixed(2)).toFixed(2); // AVG Kills
+					stats[2]['change'] = (stats[2]['value'] - realKD.toFixed(2)).toFixed(2); // K/D
+					stats[3]['change'] = (stats[3]['value'] - kpr.toFixed(2)).toFixed(2); // K/R
+					stats[4]['change'] = (stats[4]['value'] - headShot.toFixed(2)).toFixed(2); // Headshots
+
+					console.log(avgKills);
+					console.log(stats);
+
+					const statsGrid = document.getElementById('stats-grid');
+					stats.forEach((stat) => {
+						const card = document.createElement('div');
+						card.className = 'stat-card';
+						card.innerHTML = `
+								<div class="stat-title">${stat.title}</div>
+								<div class="stat-value">${stat.value}</div>
+								<div class="stat-change ${stat.change < 0 ? 'negative' : stat.change == 0 ? 'netral' : ''}">
+									${
+										stat.change > 0
+											? '<i class="fa-solid fa-arrow-up"></i>'
+											: stat.change == 0
+											? ''
+											: '<i class="fa-solid fa-arrow-down"></i>'
+									} ${Math.abs(stat.change)}
+								</div>
+							`;
+						statsGrid.appendChild(card);
+					});
 				} else {
 					console.error('Матчи не найдены или пусты:', data);
 				}
@@ -547,20 +632,12 @@ document.addEventListener('DOMContentLoaded', () => {
 					<h1 class="username">${username}</h1>
 					<div class="elo-container">
 							<h2>Current ELO: ${currentElo}</h2>
+							
 							<div class="current-elo">
 									<img class="iconLevel" src="https://cdn-frontend.faceit-cdn.net/web/static/media/assets_images_skill-icons_skill_level_${getIconLevel(
 										currentElo,
 									)}_svg.svg" />
 							</div>
-					</div>
-					<br>
-					<p class="stat-m">Statistic for matches: ${matchCount}</p>
-					<div class="list-cont">
-							<p>AVG kills: ${avgKills.toFixed(2)}</p>
-							<p>Real KD: ${realKD.toFixed(2)}</p>
-							<p>KPR: ${kpr.toFixed(2)}</p>
-							<p>HeadShots: ${hs.toFixed(0)}%</p>
-							${adr !== 'missing' ? `<p>HS% per ${rW} matches: ${adr.toFixed(1)}</p>` : ''}
 					</div>
 			`;
 		avgKillsDiv.style.display = 'block';
@@ -645,11 +722,20 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById('username').addEventListener('keypress', (event) => {
 		if (event.key === 'Enter') {
 			fetchStats();
+			document.getElementById('stats-grid').innerHTML = '';
+			document.getElementById('won-matches').innerHTML = '';
+			document.getElementById('matches').innerHTML = '';
+			document.getElementById('country').textContent = '';
+			document.getElementById('country-icon').className = '';
+			document.getElementById('games').innerHTML = '';
+			document.getElementById('maps-winnings').innerHTML = '';
+
 			document.getElementById('main-c').style.display = 'block';
 			document.getElementById('title-All-games').style.display = 'block';
 			document.getElementById('title-All-matches').style.display = 'block';
 			document.getElementById('title-list-games').style.display = 'block';
 			document.getElementById('title-maps-winning').style.display = 'block';
+			document.getElementById('container').style.display = 'block';
 		}
 	});
 
@@ -669,6 +755,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.getElementById('title-maps-winning').style.display = 'none';
 		document.getElementById('title-list-games').style.display = 'none';
 		document.getElementById('maps-winnings').innerHTML = '';
+		document.getElementById('container').style.display = 'none';
+		document.getElementById('stats-grid').innerHTML = '';
 		if (eloChart) {
 			eloChart.destroy();
 		}
