@@ -164,11 +164,36 @@ document.addEventListener('DOMContentLoaded', () => {
 					};
 
 					const stats = [
-						{ title: 'Win rate %', value: 0, change: 0 },
-						{ title: 'AVG kills', value: 0, change: 0 },
-						{ title: 'K/D', value: 0, change: 0 },
-						{ title: 'K/R', value: 0, change: 0 },
-						{ title: 'Headshot %', value: 0, change: 0 },
+						{
+							title: 'Win rate %',
+							value: 0,
+							change: 0,
+							ranges: { red: [0, 39], yellow: [40, 52], green: [53, 100] },
+						},
+						{
+							title: 'AVG kills',
+							value: 0,
+							change: 0,
+							ranges: { red: [0, 11.99], yellow: [12, 15.99], green: [16, 25] },
+						},
+						{
+							title: 'K/D',
+							value: 0,
+							change: 0,
+							ranges: { red: [0, 0.79], yellow: [0.8, 1.09], green: [1.1, 2] },
+						},
+						{
+							title: 'K/R',
+							value: 0,
+							change: 0,
+							ranges: { red: [0, 0.5], yellow: [0.51, 0.75], green: [0.76, 2] },
+						},
+						{
+							title: 'Headshot %',
+							value: 0,
+							change: 0,
+							ranges: { red: [0, 39], yellow: [40, 62], green: [63, 100] },
+						},
 					];
 
 					const statsSET = [
@@ -213,6 +238,24 @@ document.addEventListener('DOMContentLoaded', () => {
 					let lastSessionDate = null;
 					let wins = 0;
 					let totalMatchesToday = 0;
+
+					function getColor(value, ranges) {
+						if (value >= ranges.red[0] && value <= ranges.red[1]) return 'red';
+						if (value >= ranges.yellow[0] && value <= ranges.yellow[1]) return 'yellow';
+						if (value >= ranges.green[0] && value <= ranges.green[1]) return 'green';
+						return 'gray';
+					}
+
+					function getBarWidth(value, ranges) {
+						if (value >= ranges.red[0] && value <= ranges.red[1]) {
+							return ((value - ranges.red[0]) / (ranges.red[1] - ranges.red[0])) * 33;
+						} else if (value >= ranges.yellow[0] && value <= ranges.yellow[1]) {
+							return ((value - ranges.yellow[0]) / (ranges.yellow[1] - ranges.yellow[0])) * 33 + 33;
+						} else if (value >= ranges.green[0] && value <= ranges.green[1]) {
+							return ((value - ranges.green[0]) / (ranges.green[1] - ranges.green[0])) * 34 + 66;
+						}
+						return 0;
+					}
 
 					function getIconMap(map, type) {
 						const maps = {
@@ -364,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
 							<td>${match.i8 !== undefined ? match.i8 : '<i class="fa-solid fa-rectangle-xmark"></i>'}</td>
 							<td class='${
 								match.c2 >= 1
-									? match.c2 >= 1.15
+									? match.c2 >= 1.1
 										? 'td-solid-green'
 										: 'td-green'
 									: match.c2 <= 0.8
@@ -561,26 +604,29 @@ document.addEventListener('DOMContentLoaded', () => {
 					stats[3]['change'] = (stats[3]['value'] - kpr.toFixed(2)).toFixed(2); // K/R
 					stats[4]['change'] = (stats[4]['value'] - headShot.toFixed(2)).toFixed(2); // Headshots
 
-					console.log(avgKills);
-					console.log(stats);
-
 					const statsGrid = document.getElementById('stats-grid');
 					stats.forEach((stat) => {
 						const card = document.createElement('div');
 						card.className = 'stat-card';
+
+						const barColor = getColor(stat.value, stat.ranges);
+						const barWidth = getBarWidth(stat.value, stat.ranges);
+
 						card.innerHTML = `
-								<div class="stat-title">${stat.title}</div>
+							<div class="stat-title">${stat.title}</div>
+							<div class="stat-value-container">
 								<div class="stat-value">${stat.value}</div>
 								<div class="stat-change ${stat.change < 0 ? 'negative' : stat.change == 0 ? 'netral' : ''}">
-									${
-										stat.change > 0
-											? '<i class="fa-solid fa-arrow-up"></i>'
-											: stat.change == 0
-											? ''
-											: '<i class="fa-solid fa-arrow-down"></i>'
-									} ${Math.abs(stat.change)}
+									${stat.change > 0 ? '<i class="fa-solid fa-arrow-up fa-bounce"></i>' : ''}
+									${stat.change < 0 ? '<i class="fa-solid fa-arrow-down fa-bounce"></i>' : ''}
+									${stat.change == 0 ? '<i class="fa-solid fa-slash fa-rotate-270 fa-2xs"></i>' : ''}
+									${Math.abs(stat.change)}
 								</div>
-							`;
+							</div>
+							<div class="stat-bar-container">
+								<div class="stat-bar ${barColor}" style="width: ${barWidth}%;"></div>
+							</div>
+						`;
 						statsGrid.appendChild(card);
 					});
 				} else {

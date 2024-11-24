@@ -573,8 +573,12 @@ tbody tr td {
 .stat-card .stat-value {
 	font-size: 28px;
 	font-weight: bold;
-	margin: 10px 0;
+	margin-top: 10px;
 	color: #f6f4f4;
+}
+
+.stat-value {
+	padding-left: 2rem;
 }
 
 .stat-card .stat-change {
@@ -623,4 +627,50 @@ tbody tr td {
 	font-size: 12px;
 	max-width: 200px;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	z-index: 9;
+}
+
+.stat-bar-container {
+	background: #333;
+	border-radius: 4px;
+	overflow: hidden;
+	height: 10px;
+	position: relative;
+	margin-bottom: 8px;
+}
+
+.stat-bar {
+	height: 100%;
+	transition: width 0.3s ease-in-out;
+}
+
+.stat-bar.red {
+	background-color: #ff4d4f;
+}
+
+.stat-bar.yellow {
+	background-color: #ffa726;
+}
+
+.stat-bar.green {
+	background-color: #66bb6a;
+}
+
+.stat-value-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 6px;
+}
+
+.stat-change {
+	padding-top: 0.7rem;
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
+}
+
+.fa-bounce {
+	-webkit-animation-iteration-count: var(--fa-animation-iteration-count);
+	animation-iteration-count: var(--fa-animation-iteration-count);
 }
