@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
 							title: 'Headshot %',
 							value: 0,
 							change: 0,
-							ranges: { red: [0, 39], yellow: [40, 62], green: [63, 100] },
+							ranges: { red: [0, 39.99], yellow: [40, 62], green: [63, 100] },
 						},
 					];
 
