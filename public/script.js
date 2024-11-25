@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						}
 					}
 
-					function getLogoMap(map) {
+					function getLogoMap(map, i) {
 						const maps = {
 							de_mirage:
 								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-d16a1e0029.png',
@@ -302,7 +302,11 @@ document.addEventListener('DOMContentLoaded', () => {
 							de_train:
 								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-ef700a97ce.png',
 						};
-						return `<img class="logo-map" src="${maps[map] || ''}" />`;
+						if (i == 1) {
+							return maps[map] || '';
+						} else {
+							return `<img class="logo-map" src="${maps[map] || ''}" />`;
+						}
 					}
 
 					// Функция для вычисления изменений Elo
@@ -738,7 +742,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						min: minYAxis,
 						max: maxYAxis,
 						ticks: {
-							stepSize: 200, // Шаг для меток на оси Y
+							stepSize: 200,
 						},
 					},
 					x: {
@@ -747,7 +751,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				},
 				plugins: {
 					legend: {
-						display: false, // Убираем легенду
+						display: false,
 					},
 					tooltip: {
 						callbacks: {
