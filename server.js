@@ -50,7 +50,7 @@ app.get('/proxy', async (req, res) => {
 		const response = await axios.get(targetUrl);
 
 		await redisClient.set(cacheKey, JSON.stringify(response.data), {
-			EX: 3600, // Время жизни кэша в секундах
+			EX: 3600,
 		});
 		console.log('Cache miss, data saved to cache', response.data);
 
