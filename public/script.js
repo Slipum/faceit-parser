@@ -285,22 +285,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 					function getLogoMap(map, i) {
 						const maps = {
-							de_mirage:
-								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-d16a1e0029.png',
-							de_vertigo:
-								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-60355f0c79.png',
-							de_ancient:
-								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-2dd5e0fa43.png',
-							de_dust2:
-								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-e3a439ea61.png',
-							de_anubis:
-								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-5287fdc954.png',
-							de_nuke:
-								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-60bb2b8bb4.png',
-							de_inferno:
-								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-4505fb0e5f.png',
-							de_train:
-								'https://tiermaker.com/images/template_images/2022/15381016/counter-strike-map-icons-15381016/ezgif-5-ef700a97ce.png',
+							de_mirage: './assets/logoMap/mirage.png',
+							de_vertigo: './assets/logoMap/vertigo.png',
+							de_ancient: './assets/logoMap/ancient.png',
+							de_dust2: './assets/logoMap/dust2.png',
+							de_anubis: './assets/logoMap/anubis.png',
+							de_nuke: './assets/logoMap/nuke.png',
+							de_inferno: './assets/logoMap/inferno.png',
+							de_train: './assets/logoMap/train.png',
 						};
 						if (i == 1) {
 							return maps[map] || '';
